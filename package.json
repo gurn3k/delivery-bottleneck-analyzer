@@ -1,0 +1,15 @@
+{
+  "name": "delivery-bottleneck-analyzer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Finds where pull requests wait in a large engineering org, by team and review stage.",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "fetch": "node scripts/fetch.js",
+    "metrics": "node scripts/metrics.js",
+    "brief": "node scripts/brief.js",
+    "test": "node --test"
+  },
+  "license": "MIT"
+}
