@@ -16,7 +16,7 @@ Built 2026-10-04 to 2026-10-05 with AI coding agents (Claude Code), working from
 | 08 README and this report | Measured numbers only. |
 
 - **Tests:** 48, all passing (`npm test`). They cover stage edge cases (draft PRs, an lgtm removed by a new push, self-approval), every backlog state and its precedence, the rollup and ranking rules, the brief validator, and the brief's ground-truth checks against real past outputs.
-- **Size:** about 1,240 lines across `src/`, `scripts/` and `site/index.html`. No runtime dependencies.
+- **Size:** about 1,620 lines across `src/`, `scripts/` and `site/index.html`. No runtime dependencies.
 
 ## Run cost
 
