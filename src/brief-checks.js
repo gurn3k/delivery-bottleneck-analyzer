@@ -63,7 +63,7 @@ export function buildTraps(metrics) {
       id: 'consequences',
       claim: 'An effect of the waiting (releases, downstream work, delivery, deadlines).',
       evidence: 'Nothing in the data measures releases, downstream work or delivery dates.',
-      pattern: /\b(releases?|downstream|deadlines?|roadmap|stall\w*|block\w*\s+(releases?|work|delivery|progress)|delay\w*\s+delivery|slow\w*\s+(merges|delivery))\b/i,
+      pattern: /\b(releases?|downstream|deadlines?|roadmap|(stall|block)\w*\s+(downstream|releases?|work|delivery|progress)|delay\w*\s+delivery|slow\w*\s+(merges|delivery))\b/i,
       block: true,
     },
     {

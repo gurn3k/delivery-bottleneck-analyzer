@@ -63,3 +63,10 @@ test('coverage credits a finding only when all its markers appear', () => {
   assert.ok(cov.find((c) => c.id === 'review-not-merge').covered);
   assert.equal(cov.find((c) => c.id === 'author-vs-reviewer').covered, false);
 });
+
+test('describing PRs as stalled is not a consequence claim; stalling other work is', () => {
+  // Rejected by an earlier, broader pattern in the first attempt of the 2026-10-05 eval run.
+  const accurate = 'Most of the PRs stalled awaiting a reviewer are concentrated in two teams: 231 of the 368 waiting for a reviewer\u2019s lgtm are labeled sig/api-machinery or sig/node.';
+  assert.deepEqual(trapIds(accurate), []);
+  assert.deepEqual(trapIds('These PRs can stall downstream work.'), ['consequences']);
+});
