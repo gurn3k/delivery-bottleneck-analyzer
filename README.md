@@ -1,10 +1,47 @@
 # Delivery Bottleneck Analyzer
 
-Finds where pull requests wait in a large engineering org, by team (SIG) and review stage. v1 analyzes `kubernetes/kubernetes` from public GitHub data.
+Finds where pull requests wait in a large engineering org, by team (SIG) and review stage. v1 analyzes `kubernetes/kubernetes` from public GitHub data and refreshes weekly.
 
-**Status:** in progress. See [PRD.md](PRD.md), [decision records](docs/adr/) and [tickets](.scratch/v1/issues/).
+**Live dashboard:** _link added at launch_
 
-Built with AI coding agents (Claude Code) from a product spec, decision records and tickets.
+Built with AI coding agents (Claude Code) from a product spec ([PRD.md](PRD.md)), [decision records](docs/adr/) and [tickets](.scratch/v1/issues/).
+
+## What it measures
+
+Every merged PR's time is split into stages, all measured from when it became ready for review:
+
+| Stage | From → to |
+|---|---|
+| First response | ready → first comment or review by a human other than the author |
+| Review | ready → final `lgtm` label |
+| Approval | ready → final `approved` label |
+| Merge wait | both labels set → merged (CI and the merge queue) |
+
+Every open PR is put in exactly one backlog state, depending on whose move it is: no human response yet, waiting on review, waiting on approval, waiting to merge, waiting on the author, or on hold.
+
+Queues are then ranked by **PR-days of waiting**: open PRs in a team-and-stage queue × their median wait. That counts both how many PRs are stuck and how long they've been stuck.
+
+## Findings (snapshot of 2026-10-04)
+
+Measured on 1,027 PRs merged from 2026-07-06 to 2026-10-03 and all 1,270 PRs open on 2026-10-04.
+
+- **Getting reviewed is the bottleneck. Merging isn't.** The median merged PR took 7.3 days from ready to merged. Review was the slow stage: 4.1 days at the median, but 49 days for the slowest 1 in 10. Once both labels were set, the median PR merged in 1.7 hours.
+- **Two queues hold the most waiting.** sig/api-machinery's review queue holds 120 open PRs with a median wait of 85 days (10,198 PR-days). sig/node's holds 120 PRs at 75 days (9,032 PR-days).
+- **272 open PRs (21%) have no human response yet.** Their median wait is 41 days. sig/api-machinery has 94 of them, the third-largest queue overall.
+- **The author's move is as common as the reviewer's.** 337 open PRs are waiting on their author (rebase, requested changes or a process label), against 368 waiting on review.
+
+The weekly Action recomputes these numbers. The dashboard always shows the latest run.
+
+## Method and limits
+
+- Review and approval come from the `lgtm` and `approved` labels that Kubernetes' merge bot (Prow) sets. If a label is removed and re-added, the final add is used, so rework counts as review time.
+- Bots and the PR's own author never count as a response. Some Kubernetes bots are typed as regular users, so a fixed list of bot logins is also excluded (`src/bots.js`).
+- Only medians and p90 are reported, never means. Any group under 10 PRs shows `—` and is never ranked.
+- A PR labeled with more than 3 SIGs (usually dependency bumps) is reported as cross-cutting instead of being counted in every SIG.
+- Labels are a proxy. A PR waiting on a reviewer who is away looks the same as one waiting because the change is hard.
+- The unit of analysis is team and stage, never a person ([ADR 0004](docs/adr/0004-teams-and-stages-not-people.md)).
+
+The weekly risks brief is written by a small LLM via OpenRouter, from the computed numbers only. Every bullet must cite PRs from its input. A validator rejects any bullet that's uncited or cites a PR not in the data, and if no brief passes, that week's brief is left out. The script prints its cost estimate before calling and refuses to run above US$0.05.
 
 ## Run locally
 
@@ -19,3 +56,13 @@ npm test
 ```
 
 No runtime dependencies. Node 22.9+.
+
+## Weekly refresh
+
+`.github/workflows/weekly-refresh.yml` runs every Monday (and on demand). It tests, fetches, computes, writes the brief and commits `site/data/`. Vercel serves `site/` and redeploys on each push. If the brief fails, the metrics still publish.
+
+Setup: a repo secret `OPENROUTER_API_KEY`, a repo variable `OPENROUTER_MODEL`, and workflow permissions set to read and write.
+
+## License
+
+MIT
