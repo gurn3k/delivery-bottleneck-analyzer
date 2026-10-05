@@ -19,6 +19,15 @@ export const QUEUE_NAMES = {
   author: 'PRs waiting on their author (rebase, requested changes or a process label)',
 };
 
+// Whole-repo queue sentences, singular-aware: (count, isOne) => clause.
+const REPO_QUEUE_SENTENCES = {
+  untouched: (n, one) => `${n} open ${one ? 'PR has' : 'PRs have'} no human response yet`,
+  reviewer: (n, one) => `${n} open ${one ? 'PR is' : 'PRs are'} waiting for a reviewer's lgtm`,
+  approver: (n, one) => `${n} open ${one ? 'PR has' : 'PRs have'} lgtm and ${one ? 'is' : 'are'} waiting for an approver`,
+  'merge-pending': (n, one) => `${n} approved ${one ? 'PR is' : 'PRs are'} waiting to merge`,
+  author: (n, one) => `${n} open ${one ? 'PR is' : 'PRs are'} waiting on ${one ? 'its' : 'their'} author (rebase, requested changes or a process label)`,
+};
+
 // Phrases a rejected draft overused. A brief that leans on them reads as a template.
 export const BANNED_PHRASES = ['which matters because', 'it matters because'];
 
@@ -89,54 +98,45 @@ export function buildComparisons(metrics) {
 }
 
 /**
- * The compact fact sheet the model sees. Durations are pre-rounded strings, so
- * the model can copy them but not re-derive them. Only PRs in an "examples"
- * list may be cited.
+ * The fact sheet the model sees: every fact is a finished sentence with its own
+ * examples to cite, so there are no field names for the model to copy into the
+ * brief. Durations are pre-rounded and every number is computed here.
  */
 export function buildInput(metrics) {
   const o = metrics.overall;
-  const stage = (s) => ({ median: humanDays(o.merged[s].median), slowestTenPercentOver: humanDays(o.merged[s].p90) });
-  const acrossTheRepo = Object.keys(QUEUE_NAMES)
-    .filter((state) => o.backlog[state].count > 0)
-    .map((state) => ({
-      queue: QUEUE_NAMES[state],
-      openPrs: o.backlog[state].count,
-      medianWait: humanDays(o.backlog[state].waitingDays.median),
+  const stages = o.merged;
+  const facts = [];
+
+  facts.push({
+    fact: `Over ${metrics.window.from.slice(0, 10)} to ${metrics.window.to.slice(0, 10)}, ${count(stages.n)} PRs merged. From ready for review to merged took a median ${humanDays(stages.cycle.median)}; the slowest 10% took over ${humanDays(stages.cycle.p90)}.`,
+    examples: [...metrics.prs.merged].filter((r) => r.cycle !== null).sort((a, b) => b.cycle - a.cycle || a.number - b.number)
+      .slice(0, EXAMPLES_PER_QUEUE).map((r) => r.number),
+  });
+
+  for (const state of Object.keys(QUEUE_NAMES)) {
+    const b = o.backlog[state];
+    if (b.count === 0) continue;
+    const wait = b.waitingDays.median === null ? '' : `, with a median wait of ${humanDays(b.waitingDays.median)}`;
+    facts.push({
+      fact: `Across the repo, ${REPO_QUEUE_SENTENCES[state](count(b.count), b.count === 1)}${wait}.`,
       examples: longestWaiting(metrics.prs.open.filter((r) => r.state === state), EXAMPLES_PER_QUEUE),
-    }));
-  const cross = metrics.groups['cross-cutting'];
-  return {
-    repo: metrics.repo,
-    dataFetched: metrics.fetchedAt.slice(0, 10),
-    mergedPrs: {
-      count: o.merged.n,
-      window: `${metrics.window.from.slice(0, 10)} to ${metrics.window.to.slice(0, 10)}`,
-      stagesFromReadyForReview: {
-        firstHumanResponse: stage('firstResponse'),
-        lgtm: stage('review'),
-        approved: stage('approval'),
-        mergeAfterBothLabels: stage('mergeWait'),
-        totalCycle: stage('cycle'),
-      },
-    },
-    openPrs: { count: o.backlog.n, onHold: o.backlog['on-hold'].count, acrossTheRepo },
-    biggestTeamQueues: metrics.bottlenecks.slice(0, TOP_BOTTLENECKS).map((b) => ({
-      rank: b.rank,
-      team: `sig/${b.sig}`,
-      queue: QUEUE_NAMES[b.state],
-      openPrs: b.count,
-      medianWait: humanDays(b.medianWaitDays),
-      prDaysOfWaiting: b.prDays,
+    });
+  }
+
+  for (const b of metrics.bottlenecks.slice(0, TOP_BOTTLENECKS)) {
+    facts.push({
+      fact: `Ranked #${b.rank} by total waiting: sig/${b.sig} has ${count(b.count)} ${QUEUE_NAMES[b.state]}, with a median wait of ${humanDays(b.medianWaitDays)} (${count(b.prDays)} PR-days of waiting in total).`,
       examples: b.examples,
-    })),
-    comparisons: buildComparisons(metrics),
-    crossCuttingPrs: cross ? { merged: cross.merged.n, open: cross.backlog.n } : null,
-  };
+    });
+  }
+
+  facts.push(...buildComparisons(metrics));
+  return { repo: metrics.repo, dataFetched: metrics.fetchedAt.slice(0, 10), facts };
 }
 
 /** Each "examples" list in the input. A bullet must cite from exactly one of them. */
 export function citationGroups(input) {
-  return [...input.openPrs.acrossTheRepo, ...input.biggestTeamQueues, ...input.comparisons].map((q) => q.examples);
+  return input.facts.map((f) => f.examples);
 }
 
 const SYSTEM = `You write a short weekly risks brief for an engineering program manager about where pull requests wait in an open-source project.
@@ -144,11 +144,11 @@ const SYSTEM = `You write a short weekly risks brief for an engineering program 
 Rules:
 - Use only the facts in the JSON you are given. Copy numbers and durations exactly as written; do not round, convert or compute new ones.
 - Write ${MIN_BULLETS} to ${MAX_BULLETS} bullets, each one or two plain sentences. Lead with the finding, then the numbers.
-- Use the "queue" phrases as written, as the subject or object of a sentence (for example "sig/node has 120 PRs waiting for a reviewer's lgtm"). Say "across the repo" for whole-repo queues. Do not invent labels such as "reviewer state" or "global queue".
-- Prefer the findings in "comparisons": use at least two of them, copying their numbers exactly. Do not compute any comparison, share or total yourself.
+- Each bullet rewords one or two facts from "facts" in plain English. Do not use any JSON key names in the text.
+- Prefer the comparison facts (shares, "close to", median versus slowest 10%): use at least two of them. Do not compute any comparison, share or total yourself.
 - Do not speculate about consequences or causes the data does not show (for example releases, downstream work, morale or staffing).
 - Vary sentence structure. Do not start two bullets the same way. Never write "which matters because".
-- Every bullet cites 1 to 5 PRs in its "prs" array, all from the single "examples" list of the queue, team queue or comparison that bullet describes. Never cite any other PR.
+- Every bullet cites 1 to 5 PRs in its "prs" array, all from the "examples" list of one fact that bullet describes. Never cite any other PR.
 - Talk about teams, stages and queues. Never name or describe individual people.
 - Do not claim to know the project's internal priorities, staffing or intentions.
 
