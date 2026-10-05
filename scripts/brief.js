@@ -1,6 +1,6 @@
 import { readFile, writeFile, rm } from 'node:fs/promises';
 import {
-  buildInput, citablePrs, buildMessages, parseBrief, validateBrief, cleanBullets, estimateCost,
+  buildInput, citationGroups, buildMessages, parseBrief, validateBrief, cleanBullets, estimateCost,
   MAX_OUTPUT_TOKENS, COST_CAP_USD, ATTEMPTS,
 } from '../src/brief.js';
 
@@ -19,7 +19,7 @@ if (!model) fail('OPENROUTER_MODEL is not set, e.g. OPENROUTER_MODEL=google/gemi
 
 const metrics = JSON.parse(await readFile('site/data/metrics.json', 'utf8'));
 const input = buildInput(metrics);
-const allowed = citablePrs(input);
+const groups = citationGroups(input);
 
 // Prices come from OpenRouter's public model list, so the estimate tracks price changes.
 const models = await fetch(`${API}/models`).then((r) => (r.ok ? r.json() : fail(`OpenRouter model list: HTTP ${r.status}`)));
@@ -32,7 +32,7 @@ console.log(`Model: ${model}`);
 console.log(`Estimated cost: about ${perAttempt.inputTokens.toLocaleString()} input + up to ${MAX_OUTPUT_TOKENS} output tokens = ${usd(perAttempt.usd)} per attempt, ${usd(worstCase)} worst case with ${ATTEMPTS} attempts. Cap: ${usd(COST_CAP_USD)}.`);
 if (worstCase > COST_CAP_USD) fail(`Worst case is over the ${usd(COST_CAP_USD)} cap. Not calling the model. Choose a cheaper model.`);
 if (dryRun) {
-  console.log(`Dry run: ${allowed.size} citable PRs. No call made.`);
+  console.log(`Dry run: ${new Set(groups.flat()).size} citable PRs. No call made.`);
   process.exit(0);
 }
 
@@ -43,7 +43,11 @@ async function complete(messages) {
   const res = await fetch(`${API}/chat/completions`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model, messages, max_tokens: MAX_OUTPUT_TOKENS, temperature: 0.2, usage: { include: true } }),
+    // Low reasoning effort keeps reasoning models from spending the whole output
+    // budget thinking. Models without reasoning ignore it.
+    body: JSON.stringify({
+      model, messages, max_tokens: MAX_OUTPUT_TOKENS, temperature: 0.2, reasoning: { effort: 'low' }, usage: { include: true },
+    }),
   });
   if (!res.ok) throw new Error(`OpenRouter ${res.status}: ${await res.text()}`);
   const body = await res.json();
@@ -71,7 +75,7 @@ for (let attempt = 1; attempt <= ATTEMPTS; attempt++) {
     console.error(`Attempt ${attempt} rejected: ${feedback[0]}`);
     continue;
   }
-  const { ok, errors } = validateBrief(brief, allowed);
+  const { ok, errors } = validateBrief(brief, groups);
   if (!ok) {
     feedback = errors;
     console.error(`Attempt ${attempt} rejected:\n  ${errors.join('\n  ')}`);
