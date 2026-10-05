@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "description": "Finds where pull requests wait in a large engineering org, by team and review stage.",
-  "engines": { "node": ">=20" },
+  "engines": { "node": ">=22.9" },
   "scripts": {
     "fetch": "node scripts/fetch.js",
     "metrics": "node scripts/metrics.js",
-    "brief": "node scripts/brief.js",
+    "brief": "node --env-file-if-exists=.env scripts/brief.js",
     "serve": "node scripts/serve.js",
     "test": "node --test"
   },

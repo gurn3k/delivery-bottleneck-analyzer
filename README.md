@@ -13,7 +13,9 @@ export GITHUB_TOKEN=$(gh auth token)
 npm run fetch   # about 6 minutes, roughly 320 of GitHub's 5,000 hourly API points
 npm run metrics # SIG rollups and bottleneck ranking, writes site/data/metrics.json
 npm run serve   # dashboard at http://localhost:8080
+npm run brief -- --dry-run   # prints the estimated cost, makes no call (needs OPENROUTER_MODEL)
+npm run brief                # paid: writes site/data/brief.json (needs OPENROUTER_API_KEY in .env)
 npm test
 ```
 
-No runtime dependencies. Node 20+.
+No runtime dependencies. Node 22.9+.
