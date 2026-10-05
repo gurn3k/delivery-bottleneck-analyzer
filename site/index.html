@@ -450,7 +450,11 @@ function briefPanel(brief) {
   if (!brief || !Array.isArray(brief.bullets) || brief.bullets.length === 0) {
     return el('section', { class: 'card brief' }, head, el('p', { class: 'empty' }, 'No brief this week. The numbers above are unaffected.'));
   }
-  head.append(el('p', { class: 'note' }, `Written by ${brief.model} from the numbers on this page on ${fmtDate(brief.generatedAt)}. Every bullet cites PRs, and a validator rejects any citation that isn't in the data.`));
+  const edits = brief.review?.edits?.length ?? 0;
+  const reviewed = brief.review
+    ? ` Reviewed by a person on ${fmtDate(brief.review.reviewedAt)}${edits ? `; ${edits} bullet${edits === 1 ? '' : 's'} reworded for clarity` : ''}.`
+    : '';
+  head.append(el('p', { class: 'note' }, `Written by ${brief.model} from the numbers on this page on ${fmtDate(brief.generatedAt)}. Every bullet cites PRs, and checks reject any citation or number that isn't in the data.${reviewed}`));
   return el('section', { class: 'card brief' }, head,
     el('ul', {}, brief.bullets.map((b) => el('li', {}, b.text, ' ', el('span', { class: 'cites' }, '(', b.prs.flatMap((n, i) => [i ? ', ' : '', prLink(n)]), ')')))));
 }

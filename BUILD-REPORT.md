@@ -15,13 +15,29 @@ Built 2026-10-04 to 2026-10-05 with AI coding agents (Claude Code), working from
 | 07 Weekly Action | Monday GitHub Action: test, fetch, compute, brief, commit. Vercel redeploys on push. |
 | 08 README and this report | Measured numbers only. |
 
-- **Tests:** 33, all passing (`npm test`). They cover stage edge cases (draft PRs, an lgtm removed by a new push, self-approval), every backlog state and its precedence, the rollup and ranking rules, and the brief validator.
+- **Tests:** 48, all passing (`npm test`). They cover stage edge cases (draft PRs, an lgtm removed by a new push, self-approval), every backlog state and its precedence, the rollup and ranking rules, the brief validator, and the brief's ground-truth checks against real past outputs.
 - **Size:** about 1,240 lines across `src/`, `scripts/` and `site/index.html`. No runtime dependencies.
 
 ## Run cost
 
 - **GitHub:** a full fetch takes about 6 minutes and uses about 320 GraphQL points, inside both the 5,000-an-hour personal limit and the 1,000-an-hour Actions limit.
-- **Brief:** _not run yet._ Dry-run estimates for the current input (about 1,000 input tokens, up to 900 output) range from US$0.0009 worst case (gemini-2.5-flash-lite) to US$0.011 (claude-haiku-4.5). Actual cost to be recorded after the first paid run.
+- **Brief:** 7 paid runs during development on `openai/gpt-5-mini`, US$0.0206 in total. A passing run costs US$0.0020 to US$0.0042 (one or two attempts). The script refuses to run above US$0.05.
+
+## Brief evaluation
+
+Six of the seven runs were spent finding problems one at a time, because the brief started with a form validator and no ground truth (see SELF-REVIEW.md). The checks now computed from the metrics are: every number must appear in the input facts; seven known misreadings are rejected with their evidence; coverage of five key findings is scored; and a review sheet is written for a person.
+
+| Run | Result | Caught automatically today? |
+|---|---|---|
+| 1 | Two-decimal days, speculation, jargon | Yes |
+| 2 | "Global queue" labels | Yes |
+| 3 | Leaked field names | Yes (three good bullets pass) |
+| 4 | Leaked field names | No text saved |
+| 5 | Malformed JSON twice | Fixed by structured outputs |
+| 6 | Blamed the merge queue, which the data shows is fast | Yes |
+| 7 | Passed; reviewed by the product owner, all five bullets true, bullet 1 reworded | Passes as written |
+
+Published brief: run 7, covering 3 of 5 key findings. The rewording is recorded in `brief.json` and shown on the dashboard. Review record: `eval/brief/reviews/2026-10-05-run-7.md`.
 
 ## What didn't work, and what changed
 
@@ -33,4 +49,4 @@ Built 2026-10-04 to 2026-10-05 with AI coding agents (Claude Code), working from
 ## Open items
 
 - Headline numbers on the dashboard are placeholders, to be confirmed against the live run before launch.
-- Live link, first paid brief run and its actual cost.
+- Live link.

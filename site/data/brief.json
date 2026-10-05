@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-10-05T23:25:05.773Z",
+  "model": "openai/gpt-5-mini",
+  "metricsFetchedAt": "2026-10-04T23:13:16.255Z",
+  "costUsd": 0.004181,
+  "bullets": [
+    {
+      "text": "Merged PRs took a median 7.3 days from ready for review to merge; the slowest 10% took over 64 days.",
+      "prs": [
+        121910,
+        129129,
+        134037,
+        133940,
+        135486
+      ]
+    },
+    {
+      "text": "For merged PRs, reaching a reviewer lgtm took a median 4.1 days and the slowest 10% took over 49 days; once both review labels were set the median merge time was 1.7 hours.",
+      "prs": [
+        121910,
+        129129,
+        133940,
+        135486,
+        135870
+      ]
+    },
+    {
+      "text": "Across the repo, 272 open PRs remain without any human response and have a median wait of 41 days in that queue.",
+      "prs": [
+        135011,
+        133906,
+        136632,
+        137152,
+        137551
+      ]
+    },
+    {
+      "text": "There are 368 open PRs waiting for a reviewer’s lgtm with a median wait of 69 days, and 231 of those 368 (63%) are labeled for sig/api-machinery or sig/node.",
+      "prs": [
+        118378,
+        128866,
+        129087,
+        129854,
+        133589
+      ]
+    },
+    {
+      "text": "By team queue, sig/api-machinery has 120 PRs waiting for a reviewer’s lgtm with a median wait of 85 days, making it the largest by total waiting in that stage.",
+      "prs": [
+        118378,
+        128866,
+        129087,
+        133665,
+        135287
+      ]
+    }
+  ],
+  "review": {
+    "reviewedAt": "2026-10-05",
+    "verdict": "All bullets true",
+    "edits": [
+      {
+        "bullet": 1,
+        "before": "Merged PRs spent a median 7.3 days in the stage from ready for review to merged, while the slowest 10% took over 64 days.",
+        "after": "Merged PRs took a median 7.3 days from ready for review to merge; the slowest 10% took over 64 days.",
+        "reason": "Tightened wording; same facts and citations."
+      }
+    ]
+  }
+}

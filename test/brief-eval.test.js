@@ -70,3 +70,7 @@ test('describing PRs as stalled is not a consequence claim; stalling other work 
   assert.deepEqual(trapIds(accurate), []);
   assert.deepEqual(trapIds('These PRs can stall downstream work.'), ['consequences']);
 });
+
+test('run 7, the reviewed and published brief, passes as the model wrote it', () => {
+  assert.deepEqual(errorsFor(run(7)), []);
+});
