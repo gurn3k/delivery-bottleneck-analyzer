@@ -38,7 +38,7 @@ export function groupsOf(pr) {
 export function mergedRecord(pr) {
   const hours = stageDurations(pr);
   const days = Object.fromEntries(STAGES.map((s) => [s, hours[s] === null ? null : round(hours[s] / 24)]));
-  return { number: pr.number, groups: groupsOf(pr), ...days };
+  return { number: pr.number, title: pr.title, groups: groupsOf(pr), ...days };
 }
 
 export function openRecord(pr, now) {

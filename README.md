@@ -12,6 +12,7 @@ Built with AI coding agents (Claude Code) from a product spec, decision records 
 export GITHUB_TOKEN=$(gh auth token)
 npm run fetch   # about 6 minutes, roughly 320 of GitHub's 5,000 hourly API points
 npm run metrics # SIG rollups and bottleneck ranking, writes site/data/metrics.json
+npm run serve   # dashboard at http://localhost:8080
 npm test
 ```
 
