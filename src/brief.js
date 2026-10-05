@@ -155,6 +155,32 @@ Rules:
 Reply with JSON only, no prose and no code fences, in exactly this shape:
 {"bullets":[{"text":"...","prs":[123456]}]}`;
 
+// Structured output: the provider must return exactly this shape, so a reply is
+// always parseable JSON. The validator still checks the content.
+export const RESPONSE_FORMAT = {
+  type: 'json_schema',
+  json_schema: {
+    name: 'risks_brief',
+    strict: true,
+    schema: {
+      type: 'object',
+      properties: {
+        bullets: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: { text: { type: 'string' }, prs: { type: 'array', items: { type: 'integer' } } },
+            required: ['text', 'prs'],
+            additionalProperties: false,
+          },
+        },
+      },
+      required: ['bullets'],
+      additionalProperties: false,
+    },
+  },
+};
+
 export function buildMessages(input, feedback = null) {
   const messages = [
     { role: 'system', content: SYSTEM },

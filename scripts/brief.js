@@ -1,7 +1,7 @@
-import { readFile, writeFile, rm } from 'node:fs/promises';
+import { readFile, writeFile, rm, mkdir } from 'node:fs/promises';
 import {
   buildInput, citationGroups, buildMessages, parseBrief, validateBrief, cleanBullets, estimateCost,
-  MAX_OUTPUT_TOKENS, COST_CAP_USD, ATTEMPTS,
+  MAX_OUTPUT_TOKENS, COST_CAP_USD, ATTEMPTS, RESPONSE_FORMAT,
 } from '../src/brief.js';
 
 const OUT = 'site/data/brief.json';
@@ -46,7 +46,9 @@ async function complete(messages) {
     // Low reasoning effort keeps reasoning models from spending the whole output
     // budget thinking. Models without reasoning ignore it.
     body: JSON.stringify({
-      model, messages, max_tokens: MAX_OUTPUT_TOKENS, temperature: 0.2, reasoning: { effort: 'low' }, usage: { include: true },
+      model, messages, max_tokens: MAX_OUTPUT_TOKENS, reasoning: { effort: 'low' }, usage: { include: true },
+      // Route only to providers that honour the JSON schema.
+      response_format: RESPONSE_FORMAT, provider: { require_parameters: true },
     }),
   });
   if (!res.ok) throw new Error(`OpenRouter ${res.status}: ${await res.text()}`);
@@ -67,17 +69,24 @@ for (let attempt = 1; attempt <= ATTEMPTS; attempt++) {
   }
   if (reply.cost !== null) spent += reply.cost;
   console.log(`Attempt ${attempt}: ${reply.usage?.prompt_tokens ?? '?'} in / ${reply.usage?.completion_tokens ?? '?'} out tokens, cost ${reply.cost === null ? 'not reported' : usd(reply.cost)}`);
+  // Rejected replies are kept locally (data/raw is gitignored) so failures can be diagnosed.
+  const keepRejected = async (why) => {
+    await mkdir('data/raw', { recursive: true });
+    await writeFile(`data/raw/brief-rejected-${attempt}.txt`, `${why}\n\n${reply.text}`);
+  };
   let brief;
   try {
     brief = parseBrief(reply.text);
   } catch (err) {
     feedback = [`could not parse JSON: ${err.message}`];
+    await keepRejected(feedback[0]);
     console.error(`Attempt ${attempt} rejected: ${feedback[0]}`);
     continue;
   }
   const { ok, errors } = validateBrief(brief, groups);
   if (!ok) {
     feedback = errors;
+    await keepRejected(errors.join('\n'));
     console.error(`Attempt ${attempt} rejected:\n  ${errors.join('\n  ')}`);
     continue;
   }
