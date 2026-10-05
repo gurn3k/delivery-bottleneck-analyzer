@@ -1,0 +1,13 @@
+{
+  "run": 3,
+  "date": "2026-10-05",
+  "model": "openai/gpt-5-mini",
+  "outcome": "Passed on retry, then failed the field-name check added afterwards: bullets 4 and 5 say \"medianWait\". Bullets 1-3 are the target quality.",
+  "bullets": [
+    { "text": "Getting to lgtm on merged PRs took a median 4.1 days, but the slowest 10% took over 49 days; once both review labels were set, the median PR merged in 1.7 hours.", "prs": [121910, 129129] },
+    { "text": "231 of the 368 PRs waiting for a reviewer's lgtm across the repo (63%) are labeled sig/api-machinery or sig/node.", "prs": [118378, 128866, 129087, 129854, 133589] },
+    { "text": "Across the repo, 272 of 1,270 open PRs (21%) have no human response yet.", "prs": [135011, 133906] },
+    { "text": "sig/api-machinery has 120 PRs waiting for a reviewer's lgtm with a medianWait of 85 days.", "prs": [118378, 128866] },
+    { "text": "sig/node has 112 PRs waiting on their author (rebase, requested changes or a process label) with a medianWait of 41 days.", "prs": [134346, 126052] }
+  ]
+}

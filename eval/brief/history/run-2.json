@@ -1,0 +1,13 @@
+{
+  "run": 2,
+  "date": "2026-10-05",
+  "model": "openai/gpt-5-mini",
+  "outcome": "Published by the validator of the time. Rejected on review: stiff wording, internal labels pasted in as nouns (\"the global queue\").",
+  "bullets": [
+    { "text": "The global queue waiting for a reviewer's lgtm has 368 open PRs and a median wait of 69 days.", "prs": [51618, 105209, 105229, 105570, 118378] },
+    { "text": "The global queue no human response yet contains 272 open PRs with a median wait of 41 days.", "prs": [135011, 133906, 136632, 137152, 137551] },
+    { "text": "sig/api-machinery's queue waiting for a reviewer's lgtm holds 120 open PRs and shows a median wait of 85 days.", "prs": [118378, 128866, 129087, 133665, 135287] },
+    { "text": "sig/node's queue waiting for a reviewer's lgtm also has 120 open PRs with a median wait of 75 days.", "prs": [128866, 129854, 133589, 133665, 134057] },
+    { "text": "sig/node's queue waiting on the PR's author (rebase, requested changes or a process label) includes 112 open PRs and a median wait of 41 days.", "prs": [134346, 126052, 137335, 134076, 139225] }
+  ]
+}

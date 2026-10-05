@@ -41,7 +41,7 @@ The weekly Action recomputes these numbers. The dashboard always shows the lates
 - Labels are a proxy. A PR waiting on a reviewer who is away looks the same as one waiting because the change is hard.
 - The unit of analysis is team and stage, never a person ([ADR 0004](docs/adr/0004-teams-and-stages-not-people.md)).
 
-The weekly risks brief is written by a small LLM via OpenRouter, from the computed numbers only. Every bullet must cite PRs from its input. A validator rejects any bullet that's uncited or cites a PR not in the data, and if no brief passes, that week's brief is left out. The script prints its cost estimate before calling and refuses to run above US$0.05.
+The weekly risks brief is written by a small LLM via OpenRouter, from the computed numbers only. Every bullet must cite PRs from its input. A validator rejects any bullet that's uncited or cites a PR not in the data, and if no brief passes, that week's brief is left out. The script prints its cost estimate before calling and refuses to run above US$0.05. Beyond citations, every number in a bullet must appear in the computed facts, and known misreadings of the data (for example "the merge queue is slow", when merging takes 1.7 hours at the median) are rejected with the evidence. Past model outputs are kept in `eval/brief/history/` as regression cases.
 
 ## Run locally
 
@@ -52,6 +52,8 @@ npm run metrics # SIG rollups and bottleneck ranking, writes site/data/metrics.j
 npm run serve   # dashboard at http://localhost:8080
 npm run brief -- --dry-run   # prints the estimated cost, makes no call (needs OPENROUTER_MODEL)
 npm run brief                # paid: writes site/data/brief.json (needs OPENROUTER_API_KEY in .env)
+npm run brief -- --stub       # free: runs the whole brief pipeline with a stub model
+npm run eval:brief           # free: scores past model outputs against ground truth
 npm test
 ```
 

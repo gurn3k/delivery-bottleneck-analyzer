@@ -10,6 +10,8 @@
     "metrics": "node scripts/metrics.js",
     "brief": "node --env-file-if-exists=.env scripts/brief.js",
     "serve": "node scripts/serve.js",
+    "score:brief": "node scripts/score-brief.js",
+    "eval:brief": "node scripts/score-brief.js eval/brief/history/run-1.json eval/brief/history/run-2.json eval/brief/history/run-3.json eval/brief/history/run-6.json",
     "test": "node --test"
   },
   "license": "MIT"

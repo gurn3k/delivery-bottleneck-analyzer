@@ -19,6 +19,9 @@ export const QUEUE_NAMES = {
   author: 'PRs waiting on their author (rebase, requested changes or a process label)',
 };
 
+// Ranks as words: "#1" in a fact would read as a PR citation if the model copied it.
+const RANK_WORDS = ['Largest', 'Second largest', 'Third largest', 'Fourth largest', 'Fifth largest', 'Sixth largest', 'Seventh largest', 'Eighth largest'];
+
 // Whole-repo queue sentences, singular-aware: (count, isOne) => clause.
 const REPO_QUEUE_SENTENCES = {
   untouched: (n, one) => `${n} open ${one ? 'PR has' : 'PRs have'} no human response yet`,
@@ -34,6 +37,12 @@ export const BANNED_PHRASES = ['which matters because', 'it matters because'];
 // Rough token count. 3 characters per token over-counts for English and JSON,
 // so the estimate errs high.
 export const estimateTokens = (text) => Math.ceil(text.length / 3);
+
+/** Numbers stated in text, ignoring PR references (#123). "1,270" reads as 1270. */
+export function numbersIn(text) {
+  const withoutPrs = text.replace(/#\d+/g, ' ');
+  return [...withoutPrs.matchAll(/\d[\d,]*(?:\.\d+)?/g)].map((m) => Number(m[0].replace(/,/g, '')));
+}
 
 /** A duration in days as the reader should see it: "1.7 hours", "4.1 days", "85 days". */
 export function humanDays(days) {
@@ -125,7 +134,7 @@ export function buildInput(metrics) {
 
   for (const b of metrics.bottlenecks.slice(0, TOP_BOTTLENECKS)) {
     facts.push({
-      fact: `Ranked #${b.rank} by total waiting: sig/${b.sig} has ${count(b.count)} ${QUEUE_NAMES[b.state]}, with a median wait of ${humanDays(b.medianWaitDays)} (${count(b.prDays)} PR-days of waiting in total).`,
+      fact: `${RANK_WORDS[b.rank - 1] ?? `Number ${b.rank}`} by total waiting: sig/${b.sig} has ${count(b.count)} ${QUEUE_NAMES[b.state]}, with a median wait of ${humanDays(b.medianWaitDays)} (${count(b.prDays)} PR-days of waiting in total).`,
       examples: b.examples,
     });
   }
@@ -202,9 +211,12 @@ export function parseBrief(text) {
 
 /**
  * Reject anything uncited, any citation not in the input, citations mixed from
- * different queues, @mentions and banned phrases. `groups` is citationGroups().
+ * different queues, @mentions, banned phrases and field names. `groups` is
+ * citationGroups(). Optional ground-truth checks (src/brief-checks.js):
+ * `numbers` rejects any number not in the input facts, `traps` rejects known
+ * false or unsupported claims.
  */
-export function validateBrief(brief, groups) {
+export function validateBrief(brief, groups, { numbers = null, traps = [] } = {}) {
   const errors = [];
   const allowed = new Set(groups.flat());
   const bullets = brief?.bullets;
@@ -238,6 +250,14 @@ export function validateBrief(brief, groups) {
     if (fieldName) errors.push(`bullet ${n} uses the field name "${fieldName[0]}"; write it in plain words`);
     for (const phrase of BANNED_PHRASES) {
       if (b.text.toLowerCase().includes(phrase)) errors.push(`bullet ${n} uses "${phrase}"`);
+    }
+    if (numbers) {
+      for (const x of new Set(numbersIn(b.text).filter((x) => !numbers.has(x)))) {
+        errors.push(`bullet ${n} states ${x}, which is not in the input facts`);
+      }
+    }
+    for (const t of traps.filter((t) => t.block && t.pattern.test(b.text))) {
+      errors.push(`bullet ${n} claims something the data contradicts or cannot support (${t.id}): ${t.evidence}`);
     }
   });
   return { ok: errors.length === 0, errors };
