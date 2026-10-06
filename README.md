@@ -4,6 +4,8 @@ Shows where pull requests wait in a large engineering org, by team (SIG) and rev
 
 Live report: https://delivery-bottleneck-analyzer-site.vercel.app
 
+![The live report: a pull request waits 4 days for review, then merges in under 2 hours, beside a chart of where a merged PR's time goes](docs/images/screenshot.png)
+
 Kubernetes already publishes detailed PR-velocity charts through CNCF DevStats. This project answers a narrower question that DevStats spreads across several dashboards: right now, whose move is each open PR waiting on, and which team-and-stage queue holds the most waiting? It reads timelines directly from GitHub's API, ranks queues by PR-days of waiting, links every number to its PRs, and writes a short cited brief. It is a single snapshot, not a trend chart, and it doesn't measure reviewer capacity. [Existing tools](research/existing-tools.md) compares it with DevStats and commercial products.
 
 Built by Gurnek Khaira with AI coding agents (Claude Code), working from a product spec ([PRD.md](PRD.md)), [decision records](docs/adr/) and [tickets](.scratch/v1/issues/). [BUILD-REPORT.md](BUILD-REPORT.md) covers what was built and checked, [FINDINGS.md](FINDINGS.md) the live test, and [LEARNINGS.md](LEARNINGS.md) what the build taught.
