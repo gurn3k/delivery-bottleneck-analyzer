@@ -73,7 +73,7 @@ The money was small (US$0.0164 in total), but the cycle cost your time and trust
 - **Step 6, security review:** done 2026-10-06, ahead of steps 4-5 so code fixes land before copy and design work. No exploitable findings; preview-server crash fixed, CSP added.
 - **Step 4, humanizer pass:** done 2026-10-06 for the README and docs, and the redesigned page's copy was written to the same rules.
 - **Step 5, design track:** done 2026-10-06. PRODUCT.md, surface brief and direction contract, a four-hand direction round decided by the product owner (research-report direction), the build, screenshot review, finish review and DESIGN.md.
-- Step 7 (findings on the live site, then LEARNINGS.md): waits for launch.
+- **Step 7, live findings and learnings:** done 2026-10-06. Launched at https://delivery-bottleneck-analyzer-site.vercel.app; FINDINGS.md records five findings, all fixed and redeployed the same day; LEARNINGS.md records what to carry into the next build.
 
 ## Three things to carry into the next build
 

@@ -106,4 +106,4 @@ npm run eval:brief     # past model outputs against today's checks: runs 1, 2, 3
 
 ## Open items
 
-- Findings pass on the live site, then LEARNINGS.md (self-review step 7).
+None. The live test is in FINDINGS.md and the lessons in LEARNINGS.md.
