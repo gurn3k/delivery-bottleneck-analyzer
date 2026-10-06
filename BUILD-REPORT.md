@@ -70,7 +70,7 @@ Product rules are in [ADR 0009](docs/adr/0009-on-demand-snapshot.md) (on-demand 
 
 ## What couldn't be verified
 
-- **Vercel hosting and the live site.** Not deployed yet. A findings pass on the live site is planned after launch.
+- **The live site beyond a first check.** Deployed 2026-10-06 at https://delivery-bottleneck-analyzer-site.vercel.app. Checked on launch: every file loads, only `site/` is served (repo files return 404), all security headers including the CSP are live, and the page renders with its brief and PR links. A fuller findings pass on the live site follows.
 - **Keyboard-only and screen-reader use** of the dashboard. Controls are native buttons, links and a `<dialog>`, but no one has navigated it that way.
 - **Browsers other than Chrome,** and real phones. Phone width was checked at 360px in headless Chrome only.
 - **Brief quality beyond this snapshot.** One brief was reviewed by a person. The traps catch known misreadings, not new ones, so every future brief still needs a person's review (README, "Refreshing the snapshot").
@@ -107,4 +107,4 @@ npm run eval:brief     # past model outputs against today's checks: runs 1, 2, 3
 ## Open items
 
 - Headline numbers on the dashboard are placeholders, to be confirmed against the live run before launch.
-- Live link, and the repository URL in `site/app.js` (`REPO_URL`), which the page links to for source and method.
+- Findings pass on the live site, then LEARNINGS.md (self-review step 7).
