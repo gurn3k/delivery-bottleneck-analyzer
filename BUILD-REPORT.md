@@ -46,6 +46,16 @@ Published brief: run 7, covering 3 of 5 key findings. The rewording is recorded 
 - **Most `do-not-merge/*` labels aren't holds.** The first classifier treated every `do-not-merge/*` label as on hold. The real label data showed most are author to-dos (missing release note, invalid commit message), so ticket 03 was revised: only `hold`, `work-in-progress` and `lifecycle/rotten` mean on hold.
 - **Very old PRs sit in the review queue.** The longest-waiting review PR (#118378, 3.3 years) last had a comment from someone other than its author on 2023-06-07. Since then only the triage bot and the author have commented. Reviewer-queue waits are measured from ready time, as ticket 03 defines them, so PRs like this show their full wait.
 
+## Design
+
+The dashboard was redesigned on 2026-10-06 following the Impeccable process Redline used: PRODUCT.md from a short interview, a direction round (four hands: the roll, a re-roll, a bolder hand, a safer hand), then the product owner chose a research-report direction in the manner of the DORA reports. The direction contract is in `.impeccable/surfaces/site-index-html.md` and the resulting system in DESIGN.md.
+
+- The page uses one self-hosted face (Public Sans, OFL) so the CSP can stay `font-src 'self'`.
+- The old pop-up dialog became an inline evidence panel: it opens after its figure or table, moves focus to its heading, and returns focus on Close or Escape. Scripted checks confirmed each of those, plus "Show all" and that every external link has `rel=noopener`.
+- Checked at 1440px in light and dark, and at 390, 360 and 320px wide (no horizontal overflow). Text contrast is at least 4.54:1 in both themes. The Impeccable detector found nothing.
+- Finish review (run in the main thread, not as a separate agent): three fixes applied (the ranked-queues table restacks on phones, the team table shows 10 teams first, Figure 1 labels say which value is the median and which the p90), one launch item open (the "Source on GitHub" link needs the real repository URL). Captures are in `.impeccable/review/`.
+- Narrow-screen captures used a test copy of the site without the CSP, because the real policy (`frame-ancestors 'none'`) blocks the iframe the capture needs.
+
 ## Decisions made during the build
 
 Product rules are in [ADR 0009](docs/adr/0009-on-demand-snapshot.md) (on-demand snapshot) and [ADR 0010](docs/adr/0010-ranking-and-counting-rules.md) (ranking and counting). Technical decisions:
@@ -97,4 +107,4 @@ npm run eval:brief     # past model outputs against today's checks: runs 1, 2, 3
 ## Open items
 
 - Headline numbers on the dashboard are placeholders, to be confirmed against the live run before launch.
-- Live link.
+- Live link, and the repository URL in `site/app.js` (`REPO_URL`), which the page links to for source and method.

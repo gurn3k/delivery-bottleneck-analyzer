@@ -1,0 +1,71 @@
+{
+  "title": "Choose the visual world for the dashboard (safer hand)",
+  "question": "The familiar end of the spectrum: three conventional directions and the category standard. You pick.",
+  "options": [
+    {
+      "id": "safer-dora-report",
+      "label": "Research Report (DORA style)",
+      "lineage": "Google's State of DevOps / DORA reports, the engineering-leadership reference",
+      "thesis": "The snapshot as a short research report: a headline finding, a few annotated charts, and a methods section, the format engineering leaders already trust.",
+      "palette": ["#FFFFFF", "#202124", "#1A73E8", "#5F6368", "#E8F0FE"],
+      "materials": ["report page", "annotated charts", "key-finding callouts", "methods appendix"],
+      "viewport": "A report cover band with the finding as its title, three key-finding numbers beneath, then the first annotated chart (where the 7.3 days go), with byline and snapshot date.",
+      "risk": "Familiar and credible, and close to what many research pages look like; it earns trust more than it surprises.",
+      "wireframe": { "cols": 12, "rows": 10, "regions": [
+        { "label": "finding as report title + byline", "x": 0, "y": 0, "w": 12, "h": 2, "accent": true },
+        { "label": "3 key findings", "x": 0, "y": 2, "w": 12, "h": 1 },
+        { "label": "annotated chart: where time goes", "x": 0, "y": 3, "w": 8, "h": 4, "accent": true },
+        { "label": "brief", "x": 8, "y": 3, "w": 4, "h": 4 },
+        { "label": "ranked queues + methods", "x": 0, "y": 7, "w": 12, "h": 3 }
+      ] },
+      "comp": ".impeccable/mocks/decision/safer-dora.webp"
+    },
+    {
+      "id": "safer-data-journalism",
+      "label": "Data-Journalism Briefing",
+      "lineage": "FT and Economist chart-led explainers",
+      "thesis": "A short, chart-led explainer: each finding a headline sentence over one annotated chart, labels written directly on the data.",
+      "palette": ["#FFF1E5", "#33302E", "#0F5499", "#990F3D", "#CCC1B7"],
+      "materials": ["newsprint tint", "direct chart labels", "headline sentences", "source lines"],
+      "viewport": "A headline ('Kubernetes pull requests wait for review, not for merging'), a one-line standfirst, then a full-width annotated bar of where the time goes.",
+      "risk": "Reads as journalism, so the drill-down tool feel is secondary; the FT salmon tint would be borrowed clothing and must be our own.",
+      "wireframe": { "cols": 12, "rows": 10, "regions": [
+        { "label": "headline + standfirst", "x": 0, "y": 0, "w": 9, "h": 2, "accent": true },
+        { "label": "annotated chart 1", "x": 0, "y": 2, "w": 12, "h": 3, "accent": true },
+        { "label": "finding 2 + chart", "x": 0, "y": 5, "w": 12, "h": 3 },
+        { "label": "method + sources", "x": 0, "y": 8, "w": 12, "h": 2 }
+      ] },
+      "comp": ".impeccable/mocks/decision/safer-journalism.webp"
+    },
+    {
+      "id": "safer-status-page",
+      "label": "Engineering Status Page",
+      "lineage": "service status pages (GitHub Status, Atlassian Statuspage)",
+      "thesis": "Each review stage listed like a service on a status page, with its current queue, wait and a row of history ticks, so the stuck stage reads like a degraded service.",
+      "palette": ["#FFFFFF", "#24292F", "#57606A", "#BF8700", "#CF222E"],
+      "materials": ["service rows", "status pills", "tick history", "incident-style notes"],
+      "viewport": "A banner ('Review: 368 PRs waiting, median 69 days'), then one row per stage with its status, queue size and wait, the brief below as an incident note.",
+      "risk": "Instantly readable to engineers, but status language (degraded, outage) can sound like blame and implies live monitoring this snapshot doesn't do.",
+      "wireframe": { "cols": 12, "rows": 10, "regions": [
+        { "label": "status banner", "x": 0, "y": 0, "w": 12, "h": 1, "accent": true },
+        { "label": "stage rows", "x": 0, "y": 1, "w": 12, "h": 4, "accent": true },
+        { "label": "SIG queues", "x": 0, "y": 5, "w": 12, "h": 3 },
+        { "label": "brief as note", "x": 0, "y": 8, "w": 12, "h": 2 }
+      ] },
+      "comp": ".impeccable/mocks/decision/safer-status.webp"
+    }
+  ],
+  "reroll": { "registers": ["safer", "bolder"] },
+  "buildPath": { "value": "code" },
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "An engineering-metrics dashboard executed to the craft of Swarmia, LinearB and Linear's insights views.",
+    "palette": ["#FCFCFB", "#0B0B0B", "#2A78D6", "#EB6834"],
+    "materials": ["clean grid", "stat tiles", "bar charts", "sortable tables"],
+    "viewport": "Headline tiles, then the brief, the ranked table and the charts, refined to that level of finish.",
+    "risk": "Indistinguishable from every analytics product by design.",
+    "comp": ".impeccable/mocks/decision/canon.webp"
+  },
+  "steer": true
+}

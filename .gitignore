@@ -3,3 +3,4 @@ data/raw/
 .env
 .env.local
 .DS_Store
+.impeccable/questions/

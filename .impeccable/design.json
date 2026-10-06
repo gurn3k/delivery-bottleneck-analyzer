@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-06T14:43:22.990270Z",
+  "title": "Design System: Delivery Bottleneck Analyzer",
+  "extensions": {
+    "colorMeta": {
+      "page": {
+        "role": "neutral",
+        "displayName": "Report white",
+        "dark": "#121417"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "dark": "#eceef1"
+      },
+      "ink-secondary": {
+        "role": "neutral",
+        "displayName": "Secondary ink",
+        "dark": "#b4bac3"
+      },
+      "ink-tertiary": {
+        "role": "neutral",
+        "displayName": "Caption ink",
+        "dark": "#959ca6"
+      },
+      "figure-wash": {
+        "role": "neutral",
+        "displayName": "Figure wash",
+        "dark": "#171d26"
+      },
+      "link": {
+        "role": "primary",
+        "displayName": "Report blue (links)",
+        "dark": "#9cc2f4"
+      },
+      "bar-median": {
+        "role": "data",
+        "displayName": "Median",
+        "dark": "#5598e7"
+      },
+      "bar-p90": {
+        "role": "data",
+        "displayName": "p90 extent",
+        "dark": "#184f95"
+      },
+      "bar-track": {
+        "role": "data",
+        "displayName": "Bar track",
+        "dark": "#1b2533"
+      }
+    },
+    "breakpoints": [
+      {
+        "name": "stack",
+        "value": "900px"
+      },
+      {
+        "name": "phone",
+        "value": "560px"
+      }
+    ],
+    "motion": []
+  },
+  "narrative": {
+    "northStar": "A research report, not a dashboard",
+    "overview": "The finding is the title; evidence is numbered figures and tables with source lines; the method closes the page; every number opens its PRs."
+  }
+}

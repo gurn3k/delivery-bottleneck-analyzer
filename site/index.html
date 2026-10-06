@@ -3,37 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Delivery Bottleneck Analyzer</title>
-<meta name="description" content="Where pull requests wait in kubernetes/kubernetes, by team (SIG) and review stage. A snapshot from public GitHub data.">
+<title>Where Kubernetes pull requests wait</title>
+<meta name="description" content="A research snapshot of where pull requests wait in kubernetes/kubernetes, by team and by whose move it is. Every number links to the pull requests behind it.">
+<link rel="preload" href="fonts/public-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
-<main>
-  <header>
-    <div>
-      <h1>Where pull requests wait in Kubernetes</h1>
-      <p class="sub" id="subtitle">Loading…</p>
-    </div>
-    <button class="theme-btn" id="theme-btn" type="button">Dark theme</button>
-  </header>
+<a class="skip" href="#report">Skip to the report</a>
+<header class="masthead">
+  <div class="masthead-inner">
+    <a class="wordmark" href="#report">Delivery Bottleneck Analyzer</a>
+    <nav aria-label="Sections">
+      <a href="#queues">Queues</a>
+      <a href="#brief">Brief</a>
+      <a href="#teams">Teams</a>
+      <a href="#method">Method</a>
+      <a class="repo-link" id="repo-link" href="#method">Source</a>
+    </nav>
+    <button class="theme" id="theme-btn" type="button" aria-pressed="false">Dark</button>
+  </div>
+</header>
 
-  <div id="app"></div>
-
-  <footer>
-    <p><strong>Method.</strong> Times run from when a PR became ready for review. Review and approval are the final <code>lgtm</code> and <code>approved</code> labels set by Kubernetes' merge bot (Prow). Bots and the PR's own author never count as a response. Medians and p90 only; groups under <span id="min-sample">10</span> PRs show — and are never ranked. A PR with more than 3 SIG labels is counted as cross-cutting.</p>
-    <p><strong>Limits.</strong> Labels are a proxy: a PR waiting on a reviewer who is away looks the same as one waiting because the change is hard. Rework is folded into review time. This ranks queues by team and stage, never people.</p>
-    <p>Built with AI coding agents from a product spec and decision records. Public GitHub data only.</p>
-  </footer>
+<main id="report" tabindex="-1">
+  <p class="loading" id="loading">Loading the snapshot…</p>
 </main>
 
-<dialog id="drill" aria-labelledby="drill-title">
-  <div class="dlg-head">
-    <div><h2 id="drill-title"></h2><p class="note" id="drill-note"></p></div>
-    <button class="close" type="button" aria-label="Close" id="drill-close">×</button>
-  </div>
-  <div class="dlg-body" id="drill-body"></div>
-</dialog>
-<div class="tooltip" id="tooltip" role="tooltip"></div>
+<footer class="colophon" id="colophon"></footer>
 
 <script src="app.js"></script>
 </body>

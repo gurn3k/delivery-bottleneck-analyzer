@@ -71,7 +71,9 @@ The money was small (US$0.0164 in total), but the cycle cost your time and trust
 - **Step 2, research:** done 2026-10-06. [Existing tools](research/existing-tools.md) and a [DevStats cross-check](research/devstats-cross-check.md); positioning approved and applied to the PRD and README. This also led to ADR 0009: an on-demand snapshot instead of a weekly refresh.
 - **Step 3, decisions in the repo:** done 2026-10-06. ADR 0010, plus BUILD-REPORT sections for technical decisions, what couldn't be verified, and commands to run first.
 - **Step 6, security review:** done 2026-10-06, ahead of steps 4-5 so code fixes land before copy and design work. No exploitable findings; preview-server crash fixed, CSP added.
-- Steps 4, 5 and 7: not started.
+- **Step 4, humanizer pass:** done 2026-10-06 for the README and docs, and the redesigned page's copy was written to the same rules.
+- **Step 5, design track:** done 2026-10-06. PRODUCT.md, surface brief and direction contract, a four-hand direction round decided by the product owner (research-report direction), the build, screenshot review, finish review and DESIGN.md.
+- Step 7 (findings on the live site, then LEARNINGS.md): waits for launch.
 
 ## Three things to carry into the next build
 
