@@ -46,6 +46,35 @@ Published brief: run 7, covering 3 of 5 key findings. The rewording is recorded 
 - **Most `do-not-merge/*` labels aren't holds.** The first classifier treated every `do-not-merge/*` label as on hold. The real label data showed most are author to-dos (missing release note, invalid commit message), so ticket 03 was revised: only `hold`, `work-in-progress` and `lifecycle/rotten` mean on hold.
 - **Very old PRs sit in the review queue.** The longest-waiting review PR (#118378, 3.3 years) last had a comment from someone other than its author on 2023-06-07. Since then only the triage bot and the author have commented. Reviewer-queue waits are measured from ready time, as ticket 03 defines them, so PRs like this show their full wait.
 
+## Decisions made during the build
+
+Product rules are in [ADR 0009](docs/adr/0009-on-demand-snapshot.md) (on-demand snapshot) and [ADR 0010](docs/adr/0010-ranking-and-counting-rules.md) (ranking and counting). Technical decisions:
+
+- **Node 22.9+**, so `npm run brief` can read the key from `.env` with `--env-file-if-exists` and stay dependency-free.
+- **The brief's input is finished sentences, not JSON fields.** The model copied field names ("medianWait") into two rejected runs. With sentences, there are no names to copy.
+- **Structured output with `require_parameters`.** Two attempts returned malformed JSON. The request now sends a strict JSON schema and only goes to providers that honour it. `temperature` was dropped because the reasoning model doesn't support it and it would block routing.
+- **Low reasoning effort and a 1,500-token output budget.** At 900 tokens a reasoning model ran out mid-reply.
+- **A person's edits to a brief are recorded in `brief.json`** (before, after, reason) and shown on the dashboard. The edited text is re-checked.
+- **Free stub and replay modes write only to `data/raw/`** (gitignored), so they can never publish.
+- **Screenshots used headless Chrome on Windows,** because WSL's Chromium lacks system libraries.
+
+## What couldn't be verified
+
+- **Vercel hosting and the live site.** Not deployed yet. A findings pass on the live site is planned after launch.
+- **Keyboard-only and screen-reader use** of the dashboard. Controls are native buttons, links and a `<dialog>`, but no one has navigated it that way.
+- **Browsers other than Chrome,** and real phones. Phone width was checked at 360px in headless Chrome only.
+- **Brief quality beyond this snapshot.** One brief was reviewed by a person. The traps catch known misreadings, not new ones, so every future brief still needs a person's review (README, "Refreshing the snapshot").
+- **Which of our data or DevStats is closer to the truth** where they differ by 16-28%. See the [cross-check](research/devstats-cross-check.md).
+- **`npm run snapshot` end to end since it was assembled.** Each step ran on its own (fetch on 2026-10-04, the rest on 2026-10-06), but the chained script hasn't. A full run takes about 6 minutes and changes the published numbers.
+
+## Commands to run first
+
+```bash
+npm test               # 48 tests, no network
+npm run serve          # the dashboard on the committed snapshot, http://localhost:8080
+npm run eval:brief     # past model outputs against today's checks: runs 1, 2, 3 and 6 rejected, run 7 passes
+```
+
 ## Open items
 
 - Headline numbers on the dashboard are placeholders, to be confirmed against the live run before launch.
