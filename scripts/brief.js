@@ -121,7 +121,7 @@ for (let attempt = 1; attempt <= attempts; attempt++) {
   process.exit(0);
 }
 
-// No valid brief: remove last week's so it is never shown next to new numbers.
+// No valid brief: remove the previous one so it is never shown next to new numbers.
 if (!offline) await rm(OUT, { force: true });
-console.error(`No valid brief after ${attempts} attempt${attempts === 1 ? '' : 's'}. Omitted this week; metrics are unaffected. Total cost ${usd(spent)}.`);
+console.error(`No valid brief after ${attempts} attempt${attempts === 1 ? '' : 's'}. This snapshot ships without one; metrics are unaffected. Total cost ${usd(spent)}.`);
 process.exit(0);

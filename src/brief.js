@@ -1,4 +1,4 @@
-// Weekly risks brief: code picks the facts, the model only words them (ADR 0008),
+// Risks brief: code picks the facts, the model only words them (ADR 0008),
 // and every bullet must cite PRs that were in its input (ADR 0003).
 
 export const MIN_BULLETS = 4;
@@ -148,7 +148,7 @@ export function citationGroups(input) {
   return input.facts.map((f) => f.examples);
 }
 
-const SYSTEM = `You write a short weekly risks brief for an engineering program manager about where pull requests wait in an open-source project.
+const SYSTEM = `You write a short risks brief for an engineering program manager about where pull requests wait in an open-source project.
 
 Rules:
 - Use only the facts in the JSON you are given. Copy numbers and durations exactly as written; do not round, convert or compute new ones.

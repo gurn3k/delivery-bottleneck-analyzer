@@ -12,7 +12,7 @@ Built 2026-10-04 to 2026-10-05 with AI coding agents (Claude Code), working from
 | 04 SIG rollups | Median and p90 per SIG and stage, backlog counts per state, and queues ranked by PR-days of waiting. |
 | 05 Dashboard | One static HTML page, no build step. Light and dark themes, works at 360px, every number opens its PR list. |
 | 06 Risks brief | OpenRouter call with a cost estimate first, a US$0.05 cap and a citation validator. Retries once, otherwise omits the brief. |
-| 07 Weekly Action | Monday GitHub Action: test, fetch, compute, brief, commit. Vercel redeploys on push. |
+| 07 Refresh and deploy | Built as a Monday GitHub Action, then replaced by an on-demand local snapshot (`npm run snapshot`) per ADR 0009. Vercel redeploys on push. |
 | 08 README and this report | Measured numbers only. |
 
 - **Tests:** 48, all passing (`npm test`). They cover stage edge cases (draft PRs, an lgtm removed by a new push, self-approval), every backlog state and its precedence, the rollup and ranking rules, the brief validator, and the brief's ground-truth checks against real past outputs.
@@ -20,7 +20,7 @@ Built 2026-10-04 to 2026-10-05 with AI coding agents (Claude Code), working from
 
 ## Run cost
 
-- **GitHub:** a full fetch takes about 6 minutes and uses about 320 GraphQL points, inside both the 5,000-an-hour personal limit and the 1,000-an-hour Actions limit.
+- **GitHub:** a full fetch takes about 6 minutes and uses about 320 GraphQL points, inside the 5,000-an-hour limit for a personal token.
 - **Brief:** 7 paid runs during development on `openai/gpt-5-mini`, US$0.0206 in total. A passing run costs US$0.0020 to US$0.0042 (one or two attempts). The script refuses to run above US$0.05.
 
 ## Brief evaluation

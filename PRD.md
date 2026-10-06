@@ -8,8 +8,14 @@ Large engineering orgs lose most of their delivery time *waiting*, not building:
 
 ## Who it's for
 
-- **Primary:** a TPM or engineering leader who wants a weekly, evidence-backed answer to "where is work stuck, and whose queue is it in?"
+- **Primary:** a TPM or engineering leader who wants an evidence-backed answer, on demand, to "where is work stuck, and whose queue is it in?"
 - **Showcase audience:** hiring managers for TPM / Program roles. The repo demonstrates bottleneck analysis on a real, famous engineering org.
+
+## Positioning
+
+Kubernetes already publishes detailed PR-velocity charts through CNCF DevStats. This project answers a narrower question that DevStats spreads across several dashboards: **right now, whose move is each open PR waiting on, and which team-and-stage queue holds the most waiting?** It reads timelines directly from GitHub's API, ranks queues by PR-days of waiting, links every number to its PRs, and writes a short cited brief. It is a single snapshot, not a trend chart, and it doesn't measure reviewer capacity.
+
+Approved by the product owner 2026-10-06. Research: [existing tools](research/existing-tools.md); [cross-check against DevStats](research/devstats-cross-check.md), which agrees on the main finding.
 
 ## Scope: v1 analyzes `kubernetes/kubernetes`
 
@@ -35,8 +41,8 @@ Research snapshot (2026-10-04, GitHub API):
    - **Merge wait:** both gates met → merged (CI and merge queue)
 3. **Classify the open backlog** by whose move it is: author (`needs-rebase`, changes requested), reviewer (no `lgtm`), approver (`lgtm` without `approved`), untouched (no human response), on hold (`do-not-merge/*`).
 4. **Roll up by team (SIG)** and rank bottlenecks: which SIG, which stage, how big the queue, and how old.
-5. **Weekly risks brief:** an LLM writes a short narrative from the computed metrics. Every claim cites PR numbers from the input, and a validator rejects any brief that cites a PR not in the data.
-6. **Static dashboard,** refreshed weekly by a GitHub Action and deployed on Vercel.
+5. **Risks brief:** an LLM writes a short narrative from the computed metrics. Every claim cites PR numbers from the input, and a validator rejects any brief that cites a PR not in the data.
+6. **Static dashboard,** an on-demand snapshot deployed on Vercel. The owner reruns it when wanted (ADR 0009).
 
 ## Success criteria
 

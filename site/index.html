@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Delivery Bottleneck Analyzer</title>
-<meta name="description" content="Where pull requests wait in kubernetes/kubernetes, by team (SIG) and review stage. Weekly, from public GitHub data.">
+<meta name="description" content="Where pull requests wait in kubernetes/kubernetes, by team (SIG) and review stage. A snapshot from public GitHub data.">
 <style>
   :root {
     color-scheme: light;
@@ -446,9 +446,9 @@ function sigTable(m) {
 }
 
 function briefPanel(brief) {
-  const head = el('div', { class: 'card-head' }, el('h2', {}, 'Weekly risks brief'));
+  const head = el('div', { class: 'card-head' }, el('h2', {}, 'Risks brief'));
   if (!brief || !Array.isArray(brief.bullets) || brief.bullets.length === 0) {
-    return el('section', { class: 'card brief' }, head, el('p', { class: 'empty' }, 'No brief this week. The numbers above are unaffected.'));
+    return el('section', { class: 'card brief' }, head, el('p', { class: 'empty' }, 'No brief for this snapshot. The numbers above are unaffected.'));
   }
   const edits = brief.review?.edits?.length ?? 0;
   const reviewed = brief.review

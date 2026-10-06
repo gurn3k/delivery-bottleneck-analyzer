@@ -65,6 +65,12 @@ The money was small (US$0.0164 in total), but the cycle cost your time and trust
 6. **Security review** before the repo goes public.
 7. **After launch:** a FINDINGS pass on the live site, then LEARNINGS.md.
 
+## Progress
+
+- **Step 1, brief ground truth:** done 2026-10-05. Number check, seven traps, coverage, review sheets, stub and replay modes, past runs as regression cases. Run 7 passed and was reviewed by the product owner.
+- **Step 2, research:** done 2026-10-06. [Existing tools](research/existing-tools.md) and a [DevStats cross-check](research/devstats-cross-check.md); positioning approved and applied to the PRD and README. This also led to ADR 0009: an on-demand snapshot instead of a weekly refresh.
+- Steps 3-7: not started.
+
 ## Three things to carry into the next build
 
 1. **For any LLM output, write the ground truth before the first paid call,** including the false claims you expect it to make.
