@@ -33,7 +33,7 @@ export function buildTraps(metrics) {
     {
       id: 'merge-is-slow',
       claim: 'The merge queue, CI or the merge step is slow or the bottleneck.',
-      evidence: `Once both review labels are set, the median PR merges in ${humanDays(m.mergeWait.median)}. The slow stage is review: the slowest 10% took over ${humanDays(m.review.p90)} to get lgtm.`,
+      evidence: `Once both review labels are set, the median PR merges in ${humanDays(m.mergeWait.median)}. The slow stage is review: 1 in 10 took about ${humanDays(m.review.p90)} or longer to get lgtm.`,
       pattern: new RegExp(
         `\\b(merge queue|merging|merge step|merge stage|CI)\\b${gap(60)}\\b(slow|lengthy|long|bottleneck|delay\\w*)\\b` +
           `|\\b(slow|lengthy|bottleneck\\w*)\\b${gap(40)}\\b(merge queue|merging|merge step|CI)\\b`,

@@ -72,7 +72,7 @@ export function buildComparisons(metrics) {
   if (review.median !== null && review.p90 !== null && mergeWait.median !== null) {
     const slowest = [...metrics.prs.merged].filter((r) => r.review !== null).sort((a, b) => b.review - a.review || a.number - b.number);
     out.push({
-      fact: `On merged PRs, getting to lgtm took a median ${humanDays(review.median)}, but the slowest 10% took over ${humanDays(review.p90)}. Once both review labels were set, the median PR merged in ${humanDays(mergeWait.median)}.`,
+      fact: `On merged PRs, getting to lgtm took a median ${humanDays(review.median)}, but 1 in 10 took about ${humanDays(review.p90)} or longer. Once both review labels were set, the median PR merged in ${humanDays(mergeWait.median)}.`,
       examples: slowest.slice(0, EXAMPLES_PER_QUEUE).map((r) => r.number),
     });
   }
@@ -117,7 +117,7 @@ export function buildInput(metrics) {
   const facts = [];
 
   facts.push({
-    fact: `Over ${metrics.window.from.slice(0, 10)} to ${metrics.window.to.slice(0, 10)}, ${count(stages.n)} PRs merged. From ready for review to merged took a median ${humanDays(stages.cycle.median)}; the slowest 10% took over ${humanDays(stages.cycle.p90)}.`,
+    fact: `Over ${metrics.window.from.slice(0, 10)} to ${metrics.window.to.slice(0, 10)}, ${count(stages.n)} PRs merged. From ready for review to merged took a median ${humanDays(stages.cycle.median)}; 1 in 10 took about ${humanDays(stages.cycle.p90)} or longer.`,
     examples: [...metrics.prs.merged].filter((r) => r.cycle !== null).sort((a, b) => b.cycle - a.cycle || a.number - b.number)
       .slice(0, EXAMPLES_PER_QUEUE).map((r) => r.number),
   });

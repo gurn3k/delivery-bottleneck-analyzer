@@ -15,7 +15,7 @@
       ]
     },
     {
-      "text": "For merged PRs, reaching a reviewer lgtm took a median 4.1 days and the slowest 10% took over 49 days; once both review labels were set the median merge time was 1.7 hours.",
+      "text": "For merged PRs, reaching a reviewer lgtm took a median 4.1 days and 1 in 10 took about 49 days or longer; once both review labels were set the median merge time was 1.7 hours.",
       "prs": [
         121910,
         129129,
@@ -35,7 +35,7 @@
       ]
     },
     {
-      "text": "There are 368 open PRs waiting for a reviewer’s lgtm with a median wait of 69 days, and 231 of those 368 (63%) are labeled for sig/api-machinery or sig/node.",
+      "text": "There are 368 open PRs waiting for a reviewer\u2019s lgtm with a median wait of 69 days, and 231 of those 368 (63%) are labeled for sig/api-machinery or sig/node.",
       "prs": [
         118378,
         128866,
@@ -45,7 +45,7 @@
       ]
     },
     {
-      "text": "By team queue, sig/api-machinery has 120 PRs waiting for a reviewer’s lgtm with a median wait of 85 days, making it the largest by total waiting in that stage.",
+      "text": "By team queue, sig/api-machinery has 120 PRs waiting for a reviewer\u2019s lgtm with a median wait of 85 days, making it the largest by total waiting in that stage.",
       "prs": [
         118378,
         128866,
@@ -64,6 +64,13 @@
         "before": "Merged PRs spent a median 7.3 days in the stage from ready for review to merged, while the slowest 10% took over 64 days.",
         "after": "Merged PRs took a median 7.3 days from ready for review to merge; the slowest 10% took over 64 days.",
         "reason": "Tightened wording; same facts and citations."
+      },
+      {
+        "bullet": 2,
+        "before": "For merged PRs, reaching a reviewer lgtm took a median 4.1 days and the slowest 10% took over 49 days; once both review labels were set the median merge time was 1.7 hours.",
+        "after": "For merged PRs, reaching a reviewer lgtm took a median 4.1 days and 1 in 10 took about 49 days or longer; once both review labels were set the median merge time was 1.7 hours.",
+        "date": "2026-10-06",
+        "reason": "Correction: the p90 is 48.7 days, so 'over 49 days' overstated it. Same facts and citations."
       }
     ]
   }

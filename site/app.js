@@ -175,6 +175,22 @@ function reviewShare(m) {
   return { sigs, rows, total: queue.length, share: pct(rows.length, queue.length) };
 }
 
+// ---- headline: written from the data so a refreshed snapshot can't strand a stale number ----
+function headline(o) {
+  const review = o.merged.review.median;
+  const merge = o.merged.mergeWait.median;
+  if (review === null || merge === null || merge >= 1 || review < 1) return 'Where Kubernetes pull requests wait';
+  const days = Math.round(review);
+  const hours = Math.ceil(merge * 24);
+  return `A Kubernetes pull request waits ${days} ${days === 1 ? 'day' : 'days'} for review, then merges in under ${hours} ${hours === 1 ? 'hour' : 'hours'}`;
+}
+function tailSentence(o) {
+  const p90 = o.merged.review.p90;
+  if (p90 === null) return '';
+  const weeks = Math.round(p90 / 7);
+  return weeks >= 2 ? `For 1 in 10, the review wait reaches about ${weeks} weeks. ` : `For 1 in 10, the review wait reaches about ${dur(p90, true)}. `;
+}
+
 // ---- sections ----
 function opening(m) {
   const o = m.overall;
@@ -185,7 +201,7 @@ function opening(m) {
   const findings = el('ul', { class: 'findings' },
     el('li', {}, 'Getting to lgtm took a median ',
       evidenceButton(dur(o.merged.review.median, true), anchor, mergedSpec(m, 'review', 'Time to lgtm')),
-      ', and more than ', el('strong', {}, dur(o.merged.review.p90, true)), ' for the slowest 1 in 10. Once both review labels were set, merging took a median ',
+      ', and about ', el('strong', {}, dur(o.merged.review.p90, true)), ' or longer for the slowest 1 in 10. Once both review labels were set, merging took a median ',
       el('strong', {}, dur(o.merged.mergeWait.median, true)), '.'),
     share && el('li', {},
       evidenceButton(`${share.share}%`, anchor, openSpec(m, { state: 'reviewer', rows: share.rows })),
@@ -197,13 +213,12 @@ function opening(m) {
 
   container.append(
     el('div', {},
-      el('h1', {}, 'Kubernetes pull requests spend their time waiting for review'),
+      el('h1', {}, headline(o)),
       el('p', { class: 'byline' },
         'By Gurnek Khaira · Snapshot of ', longDate(m.fetchedAt), ' · ',
         `${num(o.merged.n)} merged and ${num(o.backlog.n)} open pull requests in `,
         el('a', { href: 'https://github.com/kubernetes/kubernetes', target: '_blank', rel: 'noopener' }, m.repo)),
-      el('p', { class: 'summary' },
-        `A merged pull request took a median ${dur(o.merged.cycle.median, true)} from ready for review to merged. Nearly all of it was waiting for a reviewer’s lgtm. This report shows where that waiting sits: by stage, by team, and by whose move it is.`),
+      el('p', { class: 'summary' }, `${tailSentence(o)}This report shows where that waiting sits: by stage, by team, and by whose move it is.`),
       el('p', { class: 'findings-head' }, 'Key findings'),
       findings),
     figureTime(m));
@@ -301,11 +316,14 @@ function briefSection(brief) {
     section.append(el('p', { class: 'lede' }, 'No brief for this snapshot. The numbers in this report are unaffected.'));
     return section;
   }
-  const edits = brief.review?.edits?.length ?? 0;
+  const allEdits = brief.review?.edits ?? [];
+  const corrected = allEdits.filter((e) => /^correction/i.test(e.reason ?? '')).length;
+  const reworded = allEdits.length - corrected;
+  const editNote = [reworded && `${reworded} bullet${reworded === 1 ? '' : 's'} reworded for clarity`, corrected && `${corrected} corrected`].filter(Boolean).join(', ');
   section.append(
     el('p', { class: 'provenance' },
       `Written by ${brief.model} from this report’s numbers on ${longDate(brief.generatedAt)}. Code checks that every bullet cites PRs and states only numbers that appear in the data, and rejects known misreadings. `,
-      brief.review ? `Reviewed by a person on ${longDate(brief.review.reviewedAt)}${edits ? `; ${edits} bullet${edits === 1 ? '' : 's'} reworded for clarity` : ''}.` : 'Not yet reviewed by a person.'),
+      brief.review ? `Reviewed by a person on ${longDate(brief.review.reviewedAt)}${editNote ? `; ${editNote}` : ''}.` : 'Not yet reviewed by a person.'),
     el('ul', { class: 'brief-list' }, brief.bullets.map((b) =>
       el('li', {}, b.text, el('span', { class: 'cites' }, 'Cites ', b.prs.map(prLink))))));
   return section;

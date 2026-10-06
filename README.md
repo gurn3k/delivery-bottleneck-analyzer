@@ -27,7 +27,7 @@ Queues are ranked by PR-days of waiting, which is the number of open PRs in a te
 
 These come from 1,027 PRs merged between 2026-07-06 and 2026-10-03 and all 1,270 PRs open on 2026-10-04.
 
-Getting reviewed takes the time; merging doesn't. The median merged PR took 7.3 days from ready to merged. Reaching lgtm took 4.1 days at the median and more than 49 days for the slowest 1 in 10. Once both labels were set, the median PR merged in 1.7 hours.
+A Kubernetes pull request waits about 4 days for review, then merges in under 2 hours. The median merged PR took 7.3 days from ready to merged. Reaching lgtm took 4.1 days at the median, and about 49 days or longer for the slowest 1 in 10 (roughly 7 weeks). Once both labels were set, the median PR merged in 1.7 hours.
 
 Two review queues hold the most waiting. sig/api-machinery has 120 open PRs waiting for review, with a median wait of 85 days (10,198 PR-days). sig/node also has 120, waiting a median 75 days (9,032 PR-days).
 
