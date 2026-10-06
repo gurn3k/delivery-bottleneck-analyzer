@@ -106,5 +106,4 @@ npm run eval:brief     # past model outputs against today's checks: runs 1, 2, 3
 
 ## Open items
 
-- Headline numbers on the dashboard are placeholders, to be confirmed against the live run before launch.
 - Findings pass on the live site, then LEARNINGS.md (self-review step 7).
