@@ -102,6 +102,7 @@ nav a:hover { color: var(--ink); text-decoration: underline; }
 /* Page grid */
 main { max-width: 1160px; margin: 0 auto; padding: 0 24px 64px; }
 .loading, .load-error { color: var(--ink-2); padding: 64px 0; }
+@media (scripting: none) { .loading { display: none; } }
 section.part { padding-top: 56px; margin-top: 56px; border-top: 1px solid var(--rule); }
 h1, h2, h3 { line-height: 1.15; font-weight: 700; margin: 0; text-wrap: balance; }
 h2 { font-size: 28px; letter-spacing: -0.015em; margin-bottom: 12px; }

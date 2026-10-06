@@ -7,7 +7,7 @@ const ROOT = 'site';
 const PORT = Number(process.env.PORT) || 8080;
 const vercel = JSON.parse(await readFile(join(ROOT, 'vercel.json'), 'utf8'));
 const HEADERS = Object.fromEntries(vercel.headers.flatMap((h) => h.headers.map(({ key, value }) => [key, value])));
-const TYPES = { '.html': 'text/html; charset=utf-8', '.json': 'application/json', '.js': 'text/javascript', '.css': 'text/css' };
+const TYPES = { '.html': 'text/html; charset=utf-8', '.json': 'application/json', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2' };
 
 // Loopback only: this preview is for the machine it runs on, not the local network.
 // It applies the same headers as Vercel (site/vercel.json), so the CSP is tested locally.

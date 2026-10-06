@@ -200,14 +200,14 @@ function opening(m) {
 
   const findings = el('ul', { class: 'findings' },
     el('li', {}, 'Getting a reviewer’s lgtm (“looks good to me”) took a median ',
-      evidenceButton(dur(o.merged.review.median, true), anchor, mergedSpec(m, 'review', 'Time to lgtm')),
+      evidenceButton(dur(o.merged.review.median, true), anchor, mergedSpec(m, 'review', 'Time to lgtm'), { 'aria-label': `${dur(o.merged.review.median, true)}: show merged PRs by time to lgtm` }),
       ', and about ', el('strong', {}, dur(o.merged.review.p90, true)), ' or longer for the slowest 1 in 10. Once both review labels were set, merging took a median ',
       el('strong', {}, dur(o.merged.mergeWait.median, true)), '.'),
     share && el('li', {},
-      evidenceButton(`${share.share}%`, anchor, openSpec(m, { state: 'reviewer', rows: share.rows })),
+      evidenceButton(`${share.share}%`, anchor, openSpec(m, { state: 'reviewer', rows: share.rows }), { 'aria-label': `${share.share}%: show the ${num(share.rows.length)} PRs` }),
       ` of the PRs waiting for review (${num(share.rows.length)} of ${num(share.total)}) belong to two teams, sig/${share.sigs[0]} and sig/${share.sigs[1]}. Kubernetes calls its teams SIGs, short for special interest groups.`),
     el('li', {},
-      evidenceButton(num(o.backlog.untouched.count), anchor, openSpec(m, { state: 'untouched' })),
+      evidenceButton(num(o.backlog.untouched.count), anchor, openSpec(m, { state: 'untouched' }), { 'aria-label': `${num(o.backlog.untouched.count)}: show the open PRs with no human response` }),
       ` open PRs, ${pct(o.backlog.untouched.count, o.backlog.n)}% of the backlog, have had no human response, for a median of ${dur(o.backlog.untouched.waitingDays.median, true)}.`),
   );
 
@@ -441,4 +441,7 @@ async function load(path) {
   const brief = await load('data/brief.json').catch(() => null);
   main.replaceChildren(opening(m), queuesSection(m), briefSection(brief), teamsSection(m), methodSection(m));
   colophon(m);
+  // Sections are drawn after load, so the browser's own jump to #queues found nothing. Do it now.
+  const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (target) target.scrollIntoView();
 })();

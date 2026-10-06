@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Where Kubernetes pull requests wait</title>
 <meta name="description" content="A Kubernetes pull request waits about 4 days for review, then merges in under 2 hours. A research snapshot of where pull requests wait in kubernetes/kubernetes, by stage, team and whose move it is, with every number linked to its pull requests.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://delivery-bottleneck-analyzer-site.vercel.app/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Delivery Bottleneck Analyzer">
+<meta property="og:title" content="A Kubernetes pull request waits 4 days for review, then merges in under 2 hours">
+<meta property="og:description" content="For 1 in 10, the review wait reaches about 7 weeks. A research snapshot of where Kubernetes pull requests wait, by team and by whose move it is. By Gurnek Khaira.">
+<meta property="og:url" content="https://delivery-bottleneck-analyzer-site.vercel.app/">
+<meta property="og:image" content="https://delivery-bottleneck-analyzer-site.vercel.app/share.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Headline: A Kubernetes pull request waits 4 days for review, then merges in under 2 hours. A small chart compares the review wait with the merge wait.">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="fonts/public-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="app.css">
 </head>
@@ -26,6 +38,7 @@
 
 <main id="report" tabindex="-1">
   <p class="loading" id="loading">Loading the snapshot…</p>
+  <noscript><p class="load-error">This report is drawn from its data by JavaScript, which is turned off in this browser. The findings, method and code are also on GitHub: <a href="https://github.com/gurn3k/delivery-bottleneck-analyzer">github.com/gurn3k/delivery-bottleneck-analyzer</a>.</p></noscript>
 </main>
 
 <footer class="colophon" id="colophon"></footer>
