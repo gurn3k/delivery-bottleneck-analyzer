@@ -4,7 +4,7 @@ Status: draft for product-owner review, 2026-10-04
 
 ## Problem
 
-Large engineering orgs lose most of their delivery time *waiting*, not building: waiting for a reviewer, an approver, a rebase, or CI. Status reports rarely show where that waiting happens or which team owns it. A Technical Program Manager's job is to find that queue and fix it, with evidence.
+Large engineering orgs lose most of their delivery time to waiting: for a reviewer, an approver, a rebase or CI. Status reports rarely show where that waiting happens or which team owns it. A Technical Program Manager's job is to find that queue and fix it, with evidence.
 
 ## Who it's for
 
@@ -13,7 +13,7 @@ Large engineering orgs lose most of their delivery time *waiting*, not building:
 
 ## Positioning
 
-Kubernetes already publishes detailed PR-velocity charts through CNCF DevStats. This project answers a narrower question that DevStats spreads across several dashboards: **right now, whose move is each open PR waiting on, and which team-and-stage queue holds the most waiting?** It reads timelines directly from GitHub's API, ranks queues by PR-days of waiting, links every number to its PRs, and writes a short cited brief. It is a single snapshot, not a trend chart, and it doesn't measure reviewer capacity.
+Kubernetes already publishes detailed PR-velocity charts through CNCF DevStats. This project answers a narrower question that DevStats spreads across several dashboards: right now, whose move is each open PR waiting on, and which team-and-stage queue holds the most waiting? It reads timelines directly from GitHub's API, ranks queues by PR-days of waiting, links every number to its PRs, and writes a short cited brief. It is a single snapshot, not a trend chart, and it doesn't measure reviewer capacity.
 
 Approved by the product owner 2026-10-06. Research: [existing tools](research/existing-tools.md); [cross-check against DevStats](research/devstats-cross-check.md), which agrees on the main finding.
 

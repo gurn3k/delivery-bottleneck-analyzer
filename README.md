@@ -1,16 +1,16 @@
 # Delivery Bottleneck Analyzer
 
-Finds where pull requests wait in a large engineering org, by team (SIG) and review stage. v1 analyzes `kubernetes/kubernetes` from public GitHub data, as an on-demand snapshot.
+Shows where pull requests wait in a large engineering org, by team (SIG) and review stage. Version 1 is a snapshot of `kubernetes/kubernetes`, built from public GitHub data.
 
-**Live dashboard:** _link added at launch_
+Live dashboard: _link added at launch_
 
-Kubernetes already publishes detailed PR-velocity charts through CNCF DevStats. This project answers a narrower question that DevStats spreads across several dashboards: **right now, whose move is each open PR waiting on, and which team-and-stage queue holds the most waiting?** It reads timelines directly from GitHub's API, ranks queues by PR-days of waiting, links every number to its PRs, and writes a short cited brief. It is a single snapshot, not a trend chart, and it doesn't measure reviewer capacity. See [existing tools](research/existing-tools.md).
+Kubernetes already publishes detailed PR-velocity charts through CNCF DevStats. This project answers a narrower question that DevStats spreads across several dashboards: right now, whose move is each open PR waiting on, and which team-and-stage queue holds the most waiting? It reads timelines directly from GitHub's API, ranks queues by PR-days of waiting, links every number to its PRs, and writes a short cited brief. It is a single snapshot, not a trend chart, and it doesn't measure reviewer capacity. [Existing tools](research/existing-tools.md) compares it with DevStats and commercial products.
 
-Built with AI coding agents (Claude Code) from a product spec ([PRD.md](PRD.md)), [decision records](docs/adr/) and [tickets](.scratch/v1/issues/).
+Built by Gurnek Khaira with AI coding agents (Claude Code), working from a product spec ([PRD.md](PRD.md)), [decision records](docs/adr/) and [tickets](.scratch/v1/issues/).
 
 ## What it measures
 
-Every merged PR's time is split into stages, all measured from when it became ready for review:
+Each merged PR's time is split into stages, all measured from the moment it became ready for review:
 
 | Stage | From → to |
 |---|---|
@@ -19,33 +19,36 @@ Every merged PR's time is split into stages, all measured from when it became re
 | Approval | ready → final `approved` label |
 | Merge wait | both labels set → merged (CI and the merge queue) |
 
-Every open PR is put in exactly one backlog state, depending on whose move it is: no human response yet, waiting on review, waiting on approval, waiting to merge, waiting on the author, or on hold.
+Each open PR goes into exactly one backlog state, according to whose move it is: no human response yet, waiting on review, waiting on approval, waiting to merge, waiting on the author, or on hold.
 
-Queues are then ranked by **PR-days of waiting**: open PRs in a team-and-stage queue × their median wait. That counts both how many PRs are stuck and how long they've been stuck.
+Queues are ranked by PR-days of waiting, which is the number of open PRs in a team-and-stage queue multiplied by their median wait. A queue ranks high if many PRs are stuck in it, if they've been stuck a long time, or both.
 
 ## Findings (snapshot of 2026-10-04)
 
-Measured on 1,027 PRs merged from 2026-07-06 to 2026-10-03 and all 1,270 PRs open on 2026-10-04.
+These come from 1,027 PRs merged between 2026-07-06 and 2026-10-03 and all 1,270 PRs open on 2026-10-04.
 
-- **Getting reviewed is the bottleneck. Merging isn't.** The median merged PR took 7.3 days from ready to merged. Review was the slow stage: 4.1 days at the median, but 49 days for the slowest 1 in 10. Once both labels were set, the median PR merged in 1.7 hours.
-- **Two queues hold the most waiting.** sig/api-machinery's review queue holds 120 open PRs with a median wait of 85 days (10,198 PR-days). sig/node's holds 120 PRs at 75 days (9,032 PR-days).
-- **272 open PRs (21%) have no human response yet.** Their median wait is 41 days. sig/api-machinery has 94 of them, the third-largest queue overall.
-- **The author's move is as common as the reviewer's.** 337 open PRs are waiting on their author (rebase, requested changes or a process label), against 368 waiting on review.
+Getting reviewed takes the time; merging doesn't. The median merged PR took 7.3 days from ready to merged. Reaching lgtm took 4.1 days at the median and more than 49 days for the slowest 1 in 10. Once both labels were set, the median PR merged in 1.7 hours.
 
-**Agrees with Kubernetes' own DevStats.** Recomputing DevStats' "PR Time to Approve and Merge" definitions on this data for PRs created in August and September 2026 gives the same picture: most of the time is spent waiting for lgtm, and merging after approval takes hours at the median. The medians differ by 16-28%, and the likely causes are documented in the [cross-check](research/devstats-cross-check.md).
+Two review queues hold the most waiting. sig/api-machinery has 120 open PRs waiting for review, with a median wait of 85 days (10,198 PR-days). sig/node also has 120, waiting a median 75 days (9,032 PR-days).
 
-These numbers are a snapshot of 2026-10-04. `npm run snapshot` refreshes it.
+272 open PRs, 21% of the backlog, have had no human response. Their median wait is 41 days, and 94 of them belong to sig/api-machinery, the third-largest queue overall.
+
+Waiting on the author is about as common as waiting on a reviewer: 337 open PRs need a rebase, requested changes or a process label from their author, against 368 waiting for review.
+
+The main finding agrees with Kubernetes' own DevStats. Recomputing DevStats' "PR Time to Approve and Merge" definitions on this data, for PRs created in August and September 2026, shows the same pattern: most of the time goes to waiting for lgtm, and merging after approval takes hours at the median. The medians differ by 16 to 28%; the [cross-check](research/devstats-cross-check.md) covers the likely causes.
+
+The numbers are a snapshot of 2026-10-04. `npm run snapshot` refreshes it.
 
 ## Method and limits
 
-- Review and approval come from the `lgtm` and `approved` labels that Kubernetes' merge bot (Prow) sets. If a label is removed and re-added, the final add is used, so rework counts as review time.
-- Bots and the PR's own author never count as a response. Some Kubernetes bots are typed as regular users, so a fixed list of bot logins is also excluded (`src/bots.js`).
-- Only medians and p90 are reported, never means. Any group under 10 PRs shows `—` and is never ranked.
-- A PR labeled with more than 3 SIGs (usually dependency bumps) is reported as cross-cutting instead of being counted in every SIG.
+- Review and approval come from the `lgtm` and `approved` labels that Kubernetes' merge bot (Prow) sets. When a label is removed and added again, the final add counts, so rework shows up as review time.
+- Bots and the PR's own author never count as a response. Some Kubernetes bots are registered as ordinary users, so a fixed list of bot logins is excluded as well (`src/bots.js`).
+- The page reports medians and p90, never means. A group with fewer than 10 PRs shows `—` and is never ranked.
+- A PR labeled with more than 3 SIGs, usually a dependency bump, is reported as cross-cutting so it doesn't count toward every SIG.
 - Labels are a proxy. A PR waiting on a reviewer who is away looks the same as one waiting because the change is hard.
-- The unit of analysis is team and stage, never a person ([ADR 0004](docs/adr/0004-teams-and-stages-not-people.md)).
+- The unit of analysis is a team and a stage, never a person ([ADR 0004](docs/adr/0004-teams-and-stages-not-people.md)).
 
-The risks brief is written by a small LLM via OpenRouter, from the computed numbers only. Every bullet must cite PRs from its input. A validator rejects any bullet that's uncited or cites a PR not in the data, and if no brief passes, the snapshot ships without one. The script prints its cost estimate before calling and refuses to run above US$0.05. Beyond citations, every number in a bullet must appear in the computed facts, and known misreadings of the data (for example "the merge queue is slow", when merging takes 1.7 hours at the median) are rejected with the evidence. Past model outputs are kept in `eval/brief/history/` as regression cases.
+A small LLM, called through OpenRouter, writes the risks brief from the computed numbers. Each bullet has to cite PRs from its input, and every number in it has to appear in the computed facts. Code rejects any bullet that breaks those rules, along with known misreadings of the data. For example, a bullet saying the merge queue is slow is rejected with the evidence that merging takes 1.7 hours at the median. If no brief passes, the snapshot ships without one. The script prints a cost estimate before each call and refuses to run above US$0.05. Earlier model outputs are kept in `eval/brief/history/` as regression cases.
 
 ## Run locally
 
@@ -66,18 +69,18 @@ npm run cross-check          # free: compares with DevStats (needs data/raw from
 npm test
 ```
 
-No runtime dependencies. Node 22.9+.
+No runtime dependencies. Requires Node 22.9 or later.
 
 ## Refreshing the snapshot
 
-The dashboard is a snapshot, refreshed when the owner chooses (ADR 0009):
+The owner refreshes the dashboard when they choose to (ADR 0009):
 
 1. `npm run snapshot` fetches PRs, recomputes the metrics and prints the brief's cost estimate.
-2. `npm run brief` writes the brief (paid, a fraction of a cent). It must pass every check or the snapshot ships without one.
-3. `npm run score:brief -- --sheet` writes a review sheet. A person marks each bullet before publishing.
-4. Commit `site/data/` and push. Vercel serves `site/` and redeploys on push.
+2. `npm run brief` writes the brief. It costs a fraction of a cent, and if it fails any check the snapshot ships without a brief.
+3. `npm run score:brief -- --sheet` writes a review sheet, and a person marks each bullet before publishing.
+4. Commit `site/data/` and push. Vercel serves `site/` and redeploys on each push.
 
-The OpenRouter key stays in the local `.env`. Nothing runs on a schedule and no key is stored on GitHub.
+The OpenRouter key stays in the local `.env`. Nothing runs on a schedule, and no key is stored on GitHub.
 
 ## License
 

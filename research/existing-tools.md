@@ -61,7 +61,7 @@ All of these are checkable against the sections above:
 
 ## Proposed positioning (for review; not yet applied to the PRD or README)
 
-> Kubernetes already publishes detailed PR-velocity charts through CNCF DevStats. This project answers a narrower question that DevStats spreads across several dashboards: **right now, whose move is each open PR waiting on, and which team-and-stage queue holds the most waiting?** Every open PR is put in exactly one state, queues are ranked by PR-days of waiting, every number opens its PR list, and a short brief states the findings with PR citations and checked numbers. It reads timelines directly from GitHub's API rather than the GH Archive dataset DevStats uses. It is a single snapshot, not a trend chart, and it does not measure reviewer capacity.
+> Kubernetes already publishes detailed PR-velocity charts through CNCF DevStats. This project answers a narrower question that DevStats spreads across several dashboards: right now, whose move is each open PR waiting on, and which team-and-stage queue holds the most waiting? Every open PR is put in exactly one state, queues are ranked by PR-days of waiting, every number opens its PR list, and a short brief states the findings with PR citations and checked numbers. It reads timelines directly from GitHub's API rather than the GH Archive dataset DevStats uses. It is a single snapshot, not a trend chart, and it does not measure reviewer capacity.
 
 ## Open questions for the product owner
 

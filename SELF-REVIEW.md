@@ -40,7 +40,7 @@ Verdicts: **Followed**, **Partly**, **Skipped**.
 
 The money was small (US$0.0164 in total), but the cycle cost your time and trust. Redline also notes that "passes the checks" and "is right" are different measurements, and that you have to report both.
 
-**Research (step 1).** Kubernetes already publishes **DevStats** (k8s.devstats.cncf.io), which has a "PR Time to Approve and Merge" dashboard (checked 2026-10-05). A hiring manager who knows Kubernetes may ask how this differs. The likely answer is real: DevStats charts time-to-approve and time-to-merge, while this tool ranks *whose move* each open PR is waiting on, by SIG, and writes a cited brief. But that answer should be researched and written into the PRD and README, not improvised in an interview.
+**Research (step 1).** Kubernetes already publishes DevStats (k8s.devstats.cncf.io), which has a "PR Time to Approve and Merge" dashboard (checked 2026-10-05). A hiring manager who knows Kubernetes may ask how this differs. The likely answer is real: DevStats charts time-to-approve and time-to-merge, while this tool ranks *whose move* each open PR is waiting on, by SIG, and writes a cited brief. But that answer should be researched and written into the PRD and README, not improvised in an interview.
 
 **Briefs and decisions (steps 3 and 12).** Several product calls were made during the build: on-hold PRs aren't ranked, author queues are, cross-cutting and no-SIG PRs aren't ranked, examples are ordered longest-waiting first, and percentiles use the nearest-rank method. Each was reasonable and was reported in chat, but none is in the repo. Redline's rule is that the briefs and the build report are the audit trail that separates a decision from a guess.
 
