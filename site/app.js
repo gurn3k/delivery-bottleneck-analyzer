@@ -199,13 +199,13 @@ function opening(m) {
   const anchor = () => container;
 
   const findings = el('ul', { class: 'findings' },
-    el('li', {}, 'Getting to lgtm took a median ',
+    el('li', {}, 'Getting a reviewer’s lgtm (“looks good to me”) took a median ',
       evidenceButton(dur(o.merged.review.median, true), anchor, mergedSpec(m, 'review', 'Time to lgtm')),
       ', and about ', el('strong', {}, dur(o.merged.review.p90, true)), ' or longer for the slowest 1 in 10. Once both review labels were set, merging took a median ',
       el('strong', {}, dur(o.merged.mergeWait.median, true)), '.'),
     share && el('li', {},
       evidenceButton(`${share.share}%`, anchor, openSpec(m, { state: 'reviewer', rows: share.rows })),
-      ` of the PRs waiting for review (${num(share.rows.length)} of ${num(share.total)}) belong to two teams, sig/${share.sigs[0]} and sig/${share.sigs[1]}.`),
+      ` of the PRs waiting for review (${num(share.rows.length)} of ${num(share.total)}) belong to two teams, sig/${share.sigs[0]} and sig/${share.sigs[1]}. Kubernetes calls its teams SIGs, short for special interest groups.`),
     el('li', {},
       evidenceButton(num(o.backlog.untouched.count), anchor, openSpec(m, { state: 'untouched' })),
       ` open PRs, ${pct(o.backlog.untouched.count, o.backlog.n)}% of the backlog, have had no human response, for a median of ${dur(o.backlog.untouched.waitingDays.median, true)}.`),
@@ -218,7 +218,11 @@ function opening(m) {
         'By Gurnek Khaira · Snapshot of ', longDate(m.fetchedAt), ' · ',
         `${num(o.merged.n)} merged and ${num(o.backlog.n)} open pull requests in `,
         el('a', { href: 'https://github.com/kubernetes/kubernetes', target: '_blank', rel: 'noopener' }, m.repo)),
-      el('p', { class: 'summary' }, `${tailSentence(o)}This report shows where that waiting sits: by stage, by team, and by whose move it is.`),
+      el('p', { class: 'summary' }, tailSentence(o).trim()),
+      el('p', { class: 'plain' },
+        'Software teams make changes through “pull requests” (PRs), proposals that a colleague must review and approve before they go in. ',
+        'This report looks at Kubernetes, one of the world’s largest open-source projects, and finds that changes spend almost all their time waiting to be reviewed and approved; once approved, they merge within hours. ',
+        'It shows which teams’ review queues hold the most waiting, and every number links to the real changes behind it, so anyone can check it.'),
       el('p', { class: 'findings-head' }, 'Key findings'),
       findings),
     figureTime(m));
