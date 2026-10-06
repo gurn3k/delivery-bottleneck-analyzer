@@ -16,7 +16,7 @@ Built 2026-10-04 to 2026-10-05 with AI coding agents (Claude Code), working from
 | 08 README and this report | Measured numbers only. |
 
 - **Tests:** 48, all passing (`npm test`). They cover stage edge cases (draft PRs, an lgtm removed by a new push, self-approval), every backlog state and its precedence, the rollup and ranking rules, the brief validator, and the brief's ground-truth checks against real past outputs.
-- **Size:** about 1,620 lines across `src/`, `scripts/` and `site/index.html`. No runtime dependencies.
+- **Size:** about 1,620 lines across `src/`, `scripts/` and `site/`. No runtime dependencies.
 
 ## Run cost
 
@@ -66,6 +66,25 @@ Product rules are in [ADR 0009](docs/adr/0009-on-demand-snapshot.md) (on-demand 
 - **Brief quality beyond this snapshot.** One brief was reviewed by a person. The traps catch known misreadings, not new ones, so every future brief still needs a person's review (README, "Refreshing the snapshot").
 - **Which of our data or DevStats is closer to the truth** where they differ by 16-28%. See the [cross-check](research/devstats-cross-check.md).
 - **`npm run snapshot` end to end since it was assembled.** Each step ran on its own (fetch on 2026-10-04, the rest on 2026-10-06), but the chained script hasn't. A full run takes about 6 minutes and changes the published numbers.
+
+## Security review
+
+Reviewed 2026-10-06 against commit 7735704, treating every file as new. It followed the method in Anthropic's `security-review` command (repository anthropics/claude-code-security-review), applied to whole files: only problems with more than 80% confidence that someone could exploit them count as findings.
+
+**No problem met that bar.** What was checked:
+
+- **Secrets.** `.env` has never been committed (`git log --all -- .env` is empty), and no OpenRouter, OpenAI or GitHub token pattern appears anywhere in the history. The OpenRouter key is read only in `scripts/brief.js` and sent only in the `Authorization` header to OpenRouter's fixed address. `GITHUB_TOKEN` is sent only to `api.github.com`. Neither is logged.
+- **The published page** (`site/`). All text, including PR titles from GitHub and the model's brief, is set with `textContent`. There's no `innerHTML`, `eval` or `document.write`. PR links are built from integers, and the brief validator only accepts integer citations that are in the input. The theme value read from `localStorage` is only used as a `data-theme` attribute.
+- **What the model sees.** Its input is code-built sentences, numbers, SIG names and PR numbers. No PR titles, comments or other text written by outsiders reach the prompt, so there's no route for prompt injection from GitHub content.
+- **Queries.** The GitHub GraphQL queries interpolate only PR numbers from GitHub's own search results, and the DevStats cross-check query uses constants only.
+- **The local preview server** (`scripts/serve.js`). Path traversal was probed with `../`, encoded `%2f` and `%2e%2e`, and absolute paths: every attempt returned 404.
+
+**Hardening applied anyway** (not exploitable, but cheap):
+
+- **The preview server crashed on a malformed URL** (`/%E0%A4%A` made `decodeURIComponent` throw outside the `try`). It now returns 404. It also listens on 127.0.0.1 instead of every network interface.
+- **Content Security Policy for the public site** (`site/vercel.json`): `default-src 'none'`, scripts and styles only from the site itself, no framing, no forms, plus `nosniff`, a referrer policy and a permissions policy. The inline script and styles moved to `app.js` and `app.css` to allow this. The preview server applies the same headers. Checked in Chrome: the dashboard renders fully, and a test page's inline script was blocked.
+
+**Left out under the rules:** the paid brief call is local-only and capped at US$0.05 (a cost question, not a vulnerability).
 
 ## Commands to run first
 

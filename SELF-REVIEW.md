@@ -69,7 +69,9 @@ The money was small (US$0.0164 in total), but the cycle cost your time and trust
 
 - **Step 1, brief ground truth:** done 2026-10-05. Number check, seven traps, coverage, review sheets, stub and replay modes, past runs as regression cases. Run 7 passed and was reviewed by the product owner.
 - **Step 2, research:** done 2026-10-06. [Existing tools](research/existing-tools.md) and a [DevStats cross-check](research/devstats-cross-check.md); positioning approved and applied to the PRD and README. This also led to ADR 0009: an on-demand snapshot instead of a weekly refresh.
-- Steps 3-7: not started.
+- **Step 3, decisions in the repo:** done 2026-10-06. ADR 0010, plus BUILD-REPORT sections for technical decisions, what couldn't be verified, and commands to run first.
+- **Step 6, security review:** done 2026-10-06, ahead of steps 4-5 so code fixes land before copy and design work. No exploitable findings; preview-server crash fixed, CSP added.
+- Steps 4, 5 and 7: not started.
 
 ## Three things to carry into the next build
 

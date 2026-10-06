@@ -5,16 +5,21 @@ import { extname, join, normalize } from 'node:path';
 
 const ROOT = 'site';
 const PORT = Number(process.env.PORT) || 8080;
+const vercel = JSON.parse(await readFile(join(ROOT, 'vercel.json'), 'utf8'));
+const HEADERS = Object.fromEntries(vercel.headers.flatMap((h) => h.headers.map(({ key, value }) => [key, value])));
 const TYPES = { '.html': 'text/html; charset=utf-8', '.json': 'application/json', '.js': 'text/javascript', '.css': 'text/css' };
 
+// Loopback only: this preview is for the machine it runs on, not the local network.
+// It applies the same headers as Vercel (site/vercel.json), so the CSP is tested locally.
 createServer(async (req, res) => {
-  const path = normalize(decodeURIComponent(new URL(req.url, 'http://x').pathname)).replace(/^(\.\.[/\\])+/, '');
-  const file = join(ROOT, path.endsWith('/') ? `${path}index.html` : path);
   try {
+    // Inside the try: a malformed escape like %E0%A4%A makes decodeURIComponent throw.
+    const path = normalize(decodeURIComponent(new URL(req.url, 'http://x').pathname)).replace(/^(\.\.[/\\])+/, '');
+    const file = join(ROOT, path.endsWith('/') ? `${path}index.html` : path);
     const body = await readFile(file);
-    res.writeHead(200, { 'Content-Type': TYPES[extname(file)] ?? 'application/octet-stream' });
+    res.writeHead(200, { ...HEADERS, 'Content-Type': TYPES[extname(file)] ?? 'application/octet-stream' });
     res.end(body);
   } catch {
-    res.writeHead(404).end('Not found');
+    res.writeHead(404, HEADERS).end('Not found');
   }
-}).listen(PORT, () => console.log(`Serving ${ROOT}/ at http://localhost:${PORT}`));
+}).listen(PORT, '127.0.0.1', () => console.log(`Serving ${ROOT}/ at http://localhost:${PORT}`));
