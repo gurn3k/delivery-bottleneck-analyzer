@@ -407,7 +407,7 @@ function methodSection(m) {
           doc('research/devstats-cross-check.md', 'the cross-check'), ' explains the likely causes.')),
       el('div', {},
         el('h3', {}, 'How it was built'),
-        el('p', {}, 'Built by Gurnek Khaira with AI coding agents (Claude Code), from a ', doc('PRD.md', 'product spec'), ', ',
+        el('p', {}, 'Built by Gurnek Khaira from a ', doc('PRD.md', 'product spec'), ', ',
           doc('docs/adr', 'decision records'), ' and tickets. The ', doc('BUILD-REPORT.md', 'build report'),
           ' covers tests, costs, the security review and what couldn’t be verified.'))));
 }
