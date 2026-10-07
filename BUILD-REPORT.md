@@ -99,7 +99,7 @@ Reviewed 2026-10-06 against commit 7735704, treating every file as new. It follo
 ## Commands to run first
 
 ```bash
-npm test               # 67 tests, no network
+npm test               # 68 tests, no network
 npm run serve          # the dashboard on the committed snapshot, http://localhost:8080
 npm run eval:brief     # past model outputs against today's checks: runs 1, 2, 3 and 6 rejected, run 7 passes
 ```

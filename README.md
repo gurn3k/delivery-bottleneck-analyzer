@@ -61,6 +61,7 @@ npm run snapshot # fetch + metrics + brief cost estimate (no paid call), about 6
 # or step by step:
 npm run fetch   # about 6 minutes, roughly 320 of GitHub's 5,000 hourly API points
 npm run metrics # SIG rollups and bottleneck ranking, writes site/data/metrics.json
+npm run prerender # writes the drawn report into site/index.html as static HTML
 npm run serve   # dashboard at http://localhost:8080
 npm run brief -- --dry-run   # prints the estimated cost, makes no call (needs OPENROUTER_MODEL)
 npm run brief                # paid: writes site/data/brief.json (needs OPENROUTER_API_KEY in .env)
@@ -68,7 +69,7 @@ npm run brief -- --stub       # free: runs the whole brief pipeline with a stub 
 npm run eval:brief           # free: scores past model outputs against ground truth
 npm run score:brief -- --sheet  # writes a review sheet for a person to check the brief
 npm run cross-check          # free: compares with DevStats (needs data/raw from npm run fetch)
-npm test                     # 67 tests, no network: metrics, brief checks, the fetcher and the public page
+npm test                     # 68 tests, no network: metrics, brief checks, the fetcher and the public page
 ```
 
 No runtime dependencies. Requires Node 22.9 or later.
@@ -77,10 +78,13 @@ No runtime dependencies. Requires Node 22.9 or later.
 
 The owner refreshes the dashboard when they choose to (ADR 0009):
 
-1. `npm run snapshot` fetches PRs, recomputes the metrics and prints the brief's cost estimate.
+1. `npm run snapshot` fetches PRs, recomputes the metrics, writes them into `site/index.html` and prints the brief's cost estimate.
 2. `npm run brief` writes the brief. It costs a fraction of a cent, and if it fails any check the snapshot ships without a brief.
 3. `npm run score:brief -- --sheet` writes a review sheet, and a person marks each bullet before publishing.
-4. Commit `site/data/` and push. Vercel serves `site/` and redeploys on each push.
+4. `npm run prerender` writes the reviewed brief into `site/index.html`. `npm test` fails if this step is skipped.
+5. Commit `site/` and push. Vercel serves `site/` and redeploys on each push.
+
+The page ships with the full report as static HTML, so link scanners, search engines and readers without JavaScript see the findings. `site/app.js` then redraws it with the interactive evidence panels. The static copy is drawn by running `app.js` itself against a small DOM (`src/fake-dom.js`), so the two can't disagree.
 
 The OpenRouter key stays in the local `.env`. Nothing runs on a schedule, and no key is stored on GitHub.
 

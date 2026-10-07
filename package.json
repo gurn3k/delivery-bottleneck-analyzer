@@ -6,10 +6,11 @@
   "description": "Finds where pull requests wait in a large engineering org, by team and review stage.",
   "engines": { "node": ">=22.9" },
   "scripts": {
-    "snapshot": "npm run fetch && npm run metrics && npm run brief -- --dry-run",
+    "snapshot": "npm run fetch && npm run metrics && npm run prerender && npm run brief -- --dry-run",
     "fetch": "node scripts/fetch.js",
     "metrics": "node scripts/metrics.js",
     "brief": "node --env-file-if-exists=.env scripts/brief.js",
+    "prerender": "node scripts/prerender.js",
     "serve": "node scripts/serve.js",
     "score:brief": "node scripts/score-brief.js",
     "cross-check": "node scripts/cross-check-devstats.js",

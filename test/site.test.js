@@ -1,7 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { renderSite } from './fake-dom.js';
+import { renderSite } from '../src/fake-dom.js';
+import { prerender } from '../src/prerender.js';
 
 // Expected values are computed from the committed snapshot, the same files the
 // live page reads, so a refreshed snapshot keeps these tests meaningful.
@@ -122,4 +123,12 @@ test('the report still renders without a brief', async () => {
 test('a failed data load explains how to serve the site', async () => {
   const { main } = await renderSite({ metrics: null, brief: null });
   assert.match(textOf(main), /snapshot data couldn’t load.*npm run serve/);
+});
+
+test('index.html carries the report as static HTML, matching this snapshot', async () => {
+  // Scanners and no-JS readers see this copy. Run npm run prerender when this fails.
+  assert.equal(html, await prerender(html, { metrics, brief }), 'index.html is stale: run npm run prerender');
+  assert.ok(html.includes(`<h1>${headline}</h1>`));
+  assert.doesNotMatch(html, /Loading the snapshot/);
+  assert.doesNotMatch(html, / style="/, 'inline styles would break the CSP');
 });
