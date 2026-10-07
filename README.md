@@ -1,6 +1,6 @@
-# Delivery Bottleneck Analyzer
+# Whose Move
 
-Shows where pull requests wait in a large engineering org, by team (SIG) and review stage. Version 1 is a snapshot of `kubernetes/kubernetes`, built from public GitHub data.
+Shows where pull requests wait in a large engineering org, by team (SIG) and review stage. Version 1 is a snapshot of `kubernetes/kubernetes`, built from public GitHub data. (Earlier called Delivery Bottleneck Analyzer; the repository keeps that name so existing links work.)
 
 Live report: https://delivery-bottleneck-analyzer-site.vercel.app
 

@@ -1,5 +1,5 @@
 ---
-name: Delivery Bottleneck Analyzer
+name: Whose Move
 description: A research-report page showing where Kubernetes pull requests wait.
 colors:
   page: "#ffffff"
@@ -71,7 +71,7 @@ components:
     padding: "3px 10px"
 ---
 
-# Design System: Delivery Bottleneck Analyzer
+# Design System: Whose Move
 
 ## Overview
 
