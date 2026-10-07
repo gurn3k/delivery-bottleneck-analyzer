@@ -68,7 +68,7 @@ npm run brief -- --stub       # free: runs the whole brief pipeline with a stub 
 npm run eval:brief           # free: scores past model outputs against ground truth
 npm run score:brief -- --sheet  # writes a review sheet for a person to check the brief
 npm run cross-check          # free: compares with DevStats (needs data/raw from npm run fetch)
-npm test
+npm test                     # 67 tests, no network: metrics, brief checks, the fetcher and the public page
 ```
 
 No runtime dependencies. Requires Node 22.9 or later.

@@ -15,7 +15,7 @@ Built 2026-10-04 to 2026-10-05 with AI coding agents (Claude Code), working from
 | 07 Refresh and deploy | Built as a Monday GitHub Action, then replaced by an on-demand local snapshot (`npm run snapshot`) per ADR 0009. Vercel redeploys on push. |
 | 08 README and this report | Measured numbers only. |
 
-- **Tests:** 48, all passing (`npm test`). They cover stage edge cases (draft PRs, an lgtm removed by a new push, self-approval), every backlog state and its precedence, the rollup and ranking rules, the brief validator, and the brief's ground-truth checks against real past outputs.
+- **Tests:** 67, all passing (`npm test`). They cover stage edge cases (draft PRs, an lgtm removed by a new push, self-approval), every backlog state and its precedence, the rollup and ranking rules, the brief validator, and the brief's ground-truth checks against real past outputs. Added after launch: the fetcher, run against a recorded GitHub response for PR #140042 and a fake API (timelines fetched directly, batching, long timelines, splitting ranges over the 1,000-result cap), and the public page, run in a small fake DOM against the committed snapshot (headline, findings, tables, brief, every count opening exactly that many PRs, missing values shown as —, and the share card's meta tags matching the headline). The launch build reported 48 tests; one of those was a helper file Node counted as a test, so the real number was 47. `npm test` now runs only `*.test.js` files.
 - **Size:** about 1,620 lines across `src/`, `scripts/` and `site/`. No runtime dependencies.
 
 ## Run cost
@@ -99,7 +99,7 @@ Reviewed 2026-10-06 against commit 7735704, treating every file as new. It follo
 ## Commands to run first
 
 ```bash
-npm test               # 48 tests, no network
+npm test               # 67 tests, no network
 npm run serve          # the dashboard on the committed snapshot, http://localhost:8080
 npm run eval:brief     # past model outputs against today's checks: runs 1, 2, 3 and 6 rejected, run 7 passes
 ```
