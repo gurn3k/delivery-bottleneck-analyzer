@@ -3,6 +3,7 @@
 
 // The public repository. Confirm at launch; the page links here for source and method.
 const REPO_URL = 'https://github.com/gurn3k/delivery-bottleneck-analyzer';
+const MAKER_URL = 'https://www.gurn3k.com';
 const PR_URL = (n) => `https://github.com/kubernetes/kubernetes/pull/${n}`;
 const NA = '—';
 const EVIDENCE_PAGE = 25;
@@ -415,7 +416,13 @@ function methodSection(m) {
 function colophon(m) {
   document.getElementById('colophon').replaceChildren(el('div', { class: 'colophon-inner' },
     el('span', {}, `Snapshot of ${longDate(m.fetchedAt)}. Public GitHub data. Not affiliated with Kubernetes or the CNCF.`),
-    el('span', {}, 'Built by Gurnek Khaira · ', el('a', { href: REPO_URL, target: '_blank', rel: 'noopener' }, 'Source on GitHub'))));
+    el('a', { href: REPO_URL, target: '_blank', rel: 'noopener' }, 'Source on GitHub'),
+    // Maker signature, shared across gurn3k builds. Only the wordmark links.
+    el('div', { class: 'signature' },
+      el('span', {}, '© 2026 Gurnek Khaira'),
+      el('span', { class: 'maker' }, 'Built by ',
+        el('a', { href: MAKER_URL, target: '_blank', rel: 'noopener', 'aria-label': 'gurn3k' },
+          el('span', { class: 'maker-mark' }))))));
 }
 
 // ---- boot ----
