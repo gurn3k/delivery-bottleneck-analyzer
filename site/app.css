@@ -226,14 +226,18 @@ tr.group-sep td { color: var(--ink-3); font-size: 13px; padding-top: 22px; borde
 .colophon { border-top: 1px solid var(--rule); }
 .colophon-inner { max-width: 1160px; margin: 0 auto; padding: 24px 24px 40px; color: var(--ink-3); font-size: 14px; display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
 .colophon a { color: inherit; }
-/* Maker signature: copyright left, wordmark right. The wordmark is a mask
-   filled with ink, so it follows dark mode, and turns blue on hover since blue
-   marks what's clickable. */
+/* Maker signature: copyright left, wordmark right. The wordmark is two masks:
+   "gurn" in ink and "3k" in link blue, since blue marks what's clickable. Both
+   follow dark mode, and on hover the whole wordmark turns blue. */
 .signature { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; padding-top: 16px; margin-top: 8px; border-top: 1px solid var(--rule); }
 .maker { display: inline-flex; align-items: center; gap: 8px; }
 .colophon .maker a { display: block; color: var(--ink); }
 .colophon .maker a:hover { color: var(--blue-ink); }
-.maker-mark { display: block; width: 52px; height: 14px; background: currentColor; -webkit-mask: url(gurn3k.svg) center / contain no-repeat; mask: url(gurn3k.svg) center / contain no-repeat; }
+.maker-mark { position: relative; display: block; width: 52px; height: 14px; }
+/* Two layers in the brand kit's split: "gurn" in ink, "3k" in link blue. */
+.maker-mark::before, .maker-mark::after { content: ""; position: absolute; inset: 0; }
+.maker-mark::before { background: currentColor; -webkit-mask: url(gurn3k-gurn.svg) center / contain no-repeat; mask: url(gurn3k-gurn.svg) center / contain no-repeat; }
+.maker-mark::after { background: var(--blue-ink); -webkit-mask: url(gurn3k-3k.svg) center / contain no-repeat; mask: url(gurn3k-3k.svg) center / contain no-repeat; }
 
 @media (max-width: 900px) {
   .opening, .pair, .method { grid-template-columns: minmax(0, 1fr); gap: 32px; }
