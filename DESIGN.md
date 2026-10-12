@@ -1,5 +1,5 @@
 ---
-name: Whose Move
+name: Whose Move Is It
 description: A research-report page showing where Kubernetes pull requests wait.
 colors:
   page: "#ffffff"
@@ -71,7 +71,7 @@ components:
     padding: "3px 10px"
 ---
 
-# Design System: Whose Move
+# Design System: Whose Move Is It
 
 ## Overview
 
