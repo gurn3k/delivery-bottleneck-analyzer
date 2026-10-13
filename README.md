@@ -2,7 +2,7 @@
 
 Shows where pull requests wait in a large engineering org, by team (SIG) and review stage. Version 1 is a snapshot of `kubernetes/kubernetes`, built from public GitHub data. (Earlier called Delivery Bottleneck Analyzer; the repository keeps that name so existing links work.)
 
-Live report: https://delivery-bottleneck-analyzer-site.vercel.app
+Live report: https://whosemoveisit.gurn3k.com
 
 ![The live report: a pull request waits 4 days for review, then merges in under 2 hours, beside a chart of where a merged PR's time goes](docs/images/screenshot.png)
 
