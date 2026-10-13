@@ -419,7 +419,9 @@ function colophon(m) {
     el('a', { href: REPO_URL, target: '_blank', rel: 'noopener' }, 'Source on GitHub'),
     // Maker signature, shared across gurn3k builds. Only the wordmark links.
     el('div', { class: 'signature' },
-      el('span', {}, '© 2026 Gurnek Khaira'),
+      el('span', { class: 'product' },
+        el('img', { class: 'product-mark', src: 'favicon.svg', alt: '', width: 18, height: 18 }),
+        'Whose Move Is It · © 2026 Gurnek Khaira'),
       el('span', { class: 'maker' }, 'Built by ',
         el('a', { href: MAKER_URL, target: '_blank', rel: 'noopener', 'aria-label': 'gurn3k' },
           el('span', { class: 'maker-mark' }))))));

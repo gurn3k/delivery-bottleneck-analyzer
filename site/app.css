@@ -17,6 +17,7 @@
 :root {
   color-scheme: light;
   --page: #ffffff;
+  --mark-ring: transparent;
   --ink: #16181b;
   --ink-2: #4f555d;
   --ink-3: #6b717a;
@@ -40,6 +41,7 @@
     --ink-3: #959ca6;
     --rule: #2a2f36;
     --rule-strong: #434a54;
+    --mark-ring: #434a54;
     --wash: #171d26;
     --blue: #7fb0f0;
     --blue-ink: #9cc2f4;
@@ -58,6 +60,7 @@
   --ink-3: #959ca6;
   --rule: #2a2f36;
   --rule-strong: #434a54;
+  --mark-ring: #434a54;
   --wash: #171d26;
   --blue: #7fb0f0;
   --blue-ink: #9cc2f4;
@@ -89,7 +92,10 @@ main:focus { outline: none; }
 /* Masthead */
 .masthead { position: sticky; top: 0; z-index: 10; background: var(--page); border-bottom: 1px solid var(--rule); }
 .masthead-inner { max-width: 1160px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; gap: 24px; }
-.wordmark { color: var(--ink); font-weight: 700; font-size: 15px; letter-spacing: -0.005em; text-decoration: none; white-space: nowrap; }
+.wordmark { color: var(--ink); font-weight: 700; font-size: 15px; letter-spacing: -0.005em; text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; }
+/* Product mark: the favicon tile. It is near-black, so in dark mode a 1px ring
+   in the rule colour keeps its edge visible against the page. */
+.product-mark { display: block; flex-shrink: 0; width: 24px; height: 24px; border-radius: 22%; box-shadow: 0 0 0 1px var(--mark-ring); }
 nav { display: flex; gap: 20px; margin-left: auto; font-size: 15px; }
 nav a { color: var(--ink-2); text-decoration: none; }
 nav a:hover { color: var(--ink); text-decoration: underline; }
@@ -230,6 +236,8 @@ tr.group-sep td { color: var(--ink-3); font-size: 13px; padding-top: 22px; borde
    "gurn" in ink and "3k" in link blue, since blue marks what's clickable. Both
    follow dark mode, and on hover the whole wordmark turns blue. */
 .signature { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; padding-top: 16px; margin-top: 8px; border-top: 1px solid var(--rule); }
+.product { display: inline-flex; align-items: center; gap: 8px; }
+.product .product-mark { width: 18px; height: 18px; }
 .maker { display: inline-flex; align-items: center; gap: 8px; }
 .colophon .maker a { display: block; color: var(--ink); }
 .colophon .maker a:hover { color: var(--blue-ink); }

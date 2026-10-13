@@ -21,6 +21,8 @@ class Node {
 
 const escapeText = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const escapeAttr = (s) => escapeText(s).replace(/"/g, '&quot;');
+// Void elements take no closing tag in HTML.
+const VOID = new Set(['img', 'br', 'hr', 'input', 'meta', 'link']);
 
 class Text extends Node {
   constructor(text) { super(); this.text = text; }
@@ -66,7 +68,8 @@ class Element extends Node {
   get outerHTML() {
     const tag = this.tagName.toLowerCase();
     const attrs = Object.entries(this.attributes).map(([k, v]) => ` ${k}="${escapeAttr(v)}"`).join('');
-    return `<${tag}${attrs}${this.hidden ? ' hidden' : ''}>${this.innerHTML}</${tag}>`;
+    const open = `<${tag}${attrs}${this.hidden ? ' hidden' : ''}>`;
+    return VOID.has(tag) ? open : `${open}${this.innerHTML}</${tag}>`;
   }
   get innerHTML() { return this.children.map((c) => c.outerHTML).join(''); }
   /** Every descendant element, depth first. */
