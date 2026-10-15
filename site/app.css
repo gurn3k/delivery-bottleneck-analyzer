@@ -348,6 +348,12 @@ tr.group-sep td { color: var(--ink-3); font-size: 13px; padding-top: 22px; borde
 
 @media (max-width: 900px) {
   .opening, .pair, .method { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  /* Stacked, the proof follows the claim: Figure 1 moves up to sit right after
+     the summary sentence, ahead of the explainer and the findings. */
+  .opening { display: flex; flex-direction: column; gap: 0; }
+  .opening > div { display: contents; }
+  .opening > .figure { order: 1; margin: 18px 0 32px; }
+  .opening .plain, .opening .findings-head, .opening .findings { order: 2; }
   .stage-key.state-key { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   nav a:not(.repo-link) { display: none; }
 }
@@ -390,6 +396,13 @@ tr.group-sep td { color: var(--ink-3); font-size: 13px; padding-top: 22px; borde
   table.ranked td.examples::before { flex-basis: 100%; }
   table.ranked td.examples a { margin-right: 0; }
   table.ranked td .swatch { display: none; }
+  /* Heatmap fits the phone: each team's name sits above its row of four cells. */
+  table.heat, table.heat thead, table.heat tbody { display: block; min-width: 0; }
+  table.heat tr { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; margin-bottom: 3px; }
+  table.heat thead th:first-child { display: none; }
+  table.heat thead th { padding: 0 2px 4px; font-size: 12.5px; }
+  table.heat th[scope="row"] { grid-column: 1 / -1; padding: 8px 0 2px; }
+  table.heat td { min-width: 0; height: 36px; display: flex; align-items: center; justify-content: center; }
   table.ranked .pd { justify-content: flex-end; }
 }
 @media (forced-colors: active) {
