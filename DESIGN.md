@@ -79,7 +79,7 @@ The page is a short research report in the manner of the DORA State of DevOps re
 
 ## Colors
 
-A white sheet with near-black ink, cool grays for secondary text and rules, and one report blue. Blue is reserved for data marks and for links and evidence numbers, so anything blue is either measured or clickable. The pale blue figure wash marks a figure as a figure. Dark mode is its own ramp (see `.impeccable/design.json`): the median bar becomes the lighter blue and the p90 extent the darker one, so the median still reads as the stronger mark against the dark ground.
+A white sheet with near-black ink, cool grays for secondary text and rules, and one report blue. Blue is reserved for data marks and for links and evidence numbers, so anything blue is either measured or clickable. The pale blue figure wash marks a figure as a figure. Dark mode is its own ramp (see `.impeccable/design.json`): the median bar becomes the lighter blue and the p90 extent the darker one, so the median still reads as the stronger mark against the dark ground. Each whose-move stage has one fixed colour, shared by every figure (`--s-*` tokens, `st-*` classes): no response in mid blue, waiting for lgtm in report blue, waiting for an approver in pale blue with a blue edge, waiting to merge in navy, the author's move in gray, and on hold as an empty outline. Every mark also carries a written label, so the colour is never the only cue.
 
 ## Typography
 
@@ -100,7 +100,13 @@ Square figures and tables. Data bars end in a 3px rounded corner on the data end
 ## Components
 
 - **Figure:** blue wash, "Figure n." title, a one-line subtitle, a key when there are two series, and a caption beginning "Source:" under a rule.
-- **Range bar:** a track, then the p90 extent in light blue, then the median in dark blue over it, with both values written as "median 4.1 d · p90 49 d". The whole row is a button that opens its PRs.
+- **Story:** four numbered key findings, each a bold plain-language sentence followed by its numbers and a "See Figure n" link. Sections 2 to 4 repeat the finding as their numbered heading, and Figure 1 sits beside the findings in the opening.
+- **Journey strip (Figure 1):** one bar of a merged PR's waiting, split into consecutive stages that add up to 100%, with a 2×2 key and the same split for the six teams with the most merged PRs. Each segment opens its PRs.
+- **Square grid (Figure 2):** one square per open PR, in column-major bands per stage, grouped by whose move it is. Each band opens its PRs.
+- **Queue blocks (Figure 3):** width is open PRs and height is median wait, so area is PR-days. Each block opens its PRs, and the ranks match Table 1.
+- **Heatmap (Figure 4):** teams by stage, shaded in six steps of report blue, with every count written and clickable.
+- **How it's measured:** a collapsed `details` under each figure for the technical reader, holding definitions, medians and p90, limits, or the full table.
+- **Stage row:** inside Figure 1's details, "median 4.1 d · p90 49 d" per stage. The whole row is a button that opens its PRs.
 - **Evidence number:** a bold blue number with a dotted underline. Clicking it opens an evidence panel after its figure or table, moves focus to the panel's heading, and returns focus on Close or Escape. Panels list 25 PRs, then "Show all".
 - **Table:** caption at the bottom ("Table n. Source: …"), hairline rows, right-aligned tabular numbers, the first column a row header.
 - **Brief list:** the model-written bullets with their PR citations below each, and a provenance line saying who wrote it and who reviewed it.

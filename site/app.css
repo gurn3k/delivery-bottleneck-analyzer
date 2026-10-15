@@ -31,6 +31,14 @@
   --bar-track: #e4edf9;
   --focus: #1a73e8;
   --select: #cfe0fa;
+  /* Stage colours, shared by every figure: a stage looks the same wherever it appears. */
+  --s-untouched: #6da7ec; --on-untouched: #16181b;
+  --s-reviewer: #1c5cab;  --on-reviewer: #ffffff;
+  --s-approver: #c4dbf7;  --on-approver: #16181b;
+  --s-merge: #0b2a52;     --on-merge: #ffffff;
+  --s-author: #8b939d;
+  --s-hold: #b9c0c9;
+  --on-heat: #ffffff;
 }
 @media (prefers-color-scheme: dark) {
   :root:where(:not([data-theme="light"])) {
@@ -50,6 +58,13 @@
     --bar-track: #1b2533;
     --focus: #8ab8f5;
     --select: #234a7d;
+    --s-untouched: #2f6bb8; --on-untouched: #f3f6fa;
+    --s-reviewer: #6aa6ee;  --on-reviewer: #0b1420;
+    --s-approver: #1f3f69;  --on-approver: #eceef1;
+    --s-merge: #d3e5fb;     --on-merge: #0b1420;
+    --s-author: #6b737e;
+    --s-hold: #4b535e;
+    --on-heat: #0b1420;
   }
 }
 :root[data-theme="dark"] {
@@ -69,6 +84,13 @@
   --bar-track: #1b2533;
   --focus: #8ab8f5;
   --select: #234a7d;
+  --s-untouched: #2f6bb8; --on-untouched: #f3f6fa;
+  --s-reviewer: #6aa6ee;  --on-reviewer: #0b1420;
+  --s-approver: #1f3f69;  --on-approver: #eceef1;
+  --s-merge: #d3e5fb;   --on-merge: #0b1420;
+  --s-author: #6b737e;
+  --s-hold: #4b535e;
+  --on-heat: #0b1420;
 }
 
 * { box-sizing: border-box; }
@@ -142,11 +164,6 @@ figure { margin: 0; }
 .figure .fig-sub { color: var(--ink-2); font-size: 15px; margin: 0 0 20px; }
 figcaption { color: var(--ink-3); font-size: 13.5px; line-height: 1.5; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--rule); }
 figcaption b { color: var(--ink-2); font-weight: 700; }
-.key { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13.5px; color: var(--ink-2); margin: 0 0 14px; }
-.key span { display: inline-flex; align-items: center; gap: 7px; }
-.swatch { width: 14px; height: 10px; border-radius: 0 2px 2px 0; display: inline-block; }
-.swatch.median { background: var(--bar-median); }
-.swatch.p90 { background: var(--bar-p90); }
 
 /* Range bars: median solid, p90 extent lighter, both labeled */
 .rows { display: grid; gap: 14px; }
@@ -157,29 +174,111 @@ figcaption b { color: var(--ink-2); font-weight: 700; }
 .row:hover { background: color-mix(in srgb, var(--wash), var(--ink) 5%); }
 .row-label { font-size: 15px; font-weight: 600; display: flex; justify-content: space-between; gap: 12px; }
 .row-label .vals { font-weight: 400; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.track { position: relative; height: 14px; background: var(--bar-track); }
-.track .p90, .track .median { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 0 3px 3px 0; min-width: 2px; }
-.track .p90 { background: var(--bar-p90); }
-.track .median { background: var(--bar-median); }
-.row-note { font-size: 13.5px; color: var(--ink-2); }
-
-/* Whose-move bars (single series) */
-.state-rows { display: grid; gap: 12px; }
-.state-row { display: grid; grid-template-columns: minmax(170px, 0.9fr) minmax(0, 2fr); gap: 16px; align-items: center; }
-.state-name { font-size: 15px; font-weight: 600; line-height: 1.3; }
-.state-name small { display: block; font-weight: 400; color: var(--ink-3); font-size: 13px; }
-.state-bar { display: flex; align-items: center; gap: 10px; min-width: 0; }
-.state-bar .bar { height: 16px; background: var(--bar-median); border-radius: 0 3px 3px 0; flex: none; min-width: 2px; }
-.state-bar .num { font-weight: 700; }
-.state-bar .wait { color: var(--ink-2); font-size: 14px; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.parked { margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--rule-strong); }
 
 /* Two-up figures below the opening */
 .pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; align-items: start; }
 
-.pair-backlog { margin-top: 40px; }
 .aside h3 { margin-bottom: 10px; }
 .aside p { color: var(--ink-2); max-width: 52ch; margin: 0 0 14px; }
+
+/* Stage colours. Swatches, bar segments, squares and blocks all take these. */
+.st-untouched { --c: var(--s-untouched); --on: var(--on-untouched); }
+.st-reviewer { --c: var(--s-reviewer); --on: var(--on-reviewer); }
+.st-approver { --c: var(--s-approver); --on: var(--on-approver); }
+.st-merge-pending { --c: var(--s-merge); --on: var(--on-merge); }
+.st-author { --c: var(--s-author); --on: var(--ink); }
+.st-on-hold { --c: transparent; --on: var(--ink); }
+.swatch { width: 14px; height: 10px; display: inline-block; flex: none; background: var(--c); }
+/* The palest stage and the parked one get an edge so they never vanish into the wash. */
+.st-approver.swatch, .st-approver .dot, .seg.st-approver, .team-strip .st-approver { box-shadow: inset 0 0 0 1px var(--s-reviewer); }
+.st-on-hold.swatch, .st-on-hold .dot { box-shadow: inset 0 0 0 1.5px var(--s-hold); }
+
+/* Key findings: numbered, each led by its plain-language finding */
+ol.findings { counter-reset: finding; }
+ol.findings li { counter-increment: finding; position: relative; padding-left: 28px; }
+ol.findings li::before { content: counter(finding); position: absolute; left: 0; top: 14px; font-size: 18px; line-height: 1.35; font-weight: 700; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.findings li { line-height: 1.55; }
+.finding-head { display: block; font-size: 18px; line-height: 1.35; margin-bottom: 4px; text-wrap: balance; }
+.see { font-size: 15px; white-space: nowrap; }
+
+/* Figure 1: the journey strip */
+.fig-stat { font-size: 22px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.25; margin: 0 0 16px; text-wrap: balance; }
+.strip { display: flex; gap: 2px; height: 48px; }
+.seg {
+  flex: 1 1 0; min-width: 0; display: flex; align-items: center; padding: 0 8px; border: 0; cursor: pointer; overflow: hidden;
+  font: inherit; font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; background: var(--c); color: var(--on);
+}
+.seg:hover, .band:hover .dot, .qbar:hover { filter: brightness(0.92); }
+.seg[aria-expanded="true"], .band[aria-expanded="true"], .qbar[aria-expanded="true"] { outline: 2px solid var(--ink); outline-offset: 2px; }
+.stage-key { list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 20px; font-size: 14px; line-height: 1.35; color: var(--ink-2); }
+.stage-key li { display: flex; gap: 8px; align-items: baseline; min-width: 0; }
+.stage-key .swatch { position: relative; top: 1px; }
+.stage-key b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.stage-key small { display: block; color: var(--ink-3); font-size: 13px; }
+.stage-key.state-key { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 20px; }
+.stage-key.inline { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 0 0 18px; }
+.team-strips { margin-top: 26px; display: grid; gap: 8px; }
+.team-strips-head { font-size: 14px; font-weight: 700; margin: 0 0 2px; }
+.team-strip { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 12px; font-size: 13.5px; }
+.team-strip .name { font-weight: 600; grid-row: 1; }
+.team-strip .pre { grid-row: 1; grid-column: 2; color: var(--ink-2); font-variant-numeric: tabular-nums; text-align: right; }
+.team-strip .bar { grid-row: 2; grid-column: 1 / -1; display: flex; gap: 1px; height: 12px; }
+.team-strip .bar span { flex: 1 1 0; background: var(--c); }
+
+/* The technical layer: collapsed under each figure */
+.how { margin-top: 18px; border-top: 1px solid var(--rule); padding-top: 10px; font-size: 14.5px; color: var(--ink-2); }
+.how summary { cursor: pointer; color: var(--blue-ink); font-weight: 600; width: fit-content; }
+.how summary:hover { text-decoration: underline; text-underline-offset: 3px; }
+.how[open] summary { margin-bottom: 10px; }
+.how p { margin: 0 0 10px; max-width: 70ch; }
+.how ul { margin: 12px 0 0; padding-left: 20px; max-width: 72ch; }
+.how li { margin-bottom: 4px; }
+.how .rows { gap: 4px; }
+
+/* Figure 2: one square per open PR */
+.waffle { display: flex; gap: 16px; align-items: flex-end; }
+.wg { flex: var(--c20) 1 0; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.wg-head { margin: 0; font-size: 14px; line-height: 1.3; color: var(--ink-2); }
+.wg-head b { display: block; color: var(--ink); font-size: 19px; font-variant-numeric: tabular-nums; }
+.wg-head .short { display: none; }
+.wg-bands { display: flex; gap: 4px; }
+.band {
+  flex: var(--c20) 1 0; min-width: 0; display: grid; grid-template-rows: repeat(20, auto); grid-auto-flow: column; grid-auto-columns: 1fr;
+  gap: 2px; align-content: start; padding: 0; border: 0; background: none; cursor: pointer;
+}
+.dot { aspect-ratio: 1; background: var(--c); }
+.pair.notes { margin-top: 32px; }
+
+/* Figure 3: queues as blocks; area is PR-days */
+.qplot { --gut: 40px; position: relative; height: 280px; margin: 26px 0 0 var(--gut); }
+.qgrid span { position: absolute; left: calc(-1 * var(--gut)); right: 0; height: 0; font-size: 12px; line-height: 0; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.qgrid span::after { content: ""; position: absolute; left: var(--gut); right: 0; top: 0; border-top: 1px solid var(--rule); }
+.qbars { position: absolute; inset: 0; display: flex; align-items: flex-end; gap: 4px; }
+.qbar { position: relative; flex: 1 1 0; min-width: 0; padding: 0; border: 0; cursor: pointer; background: var(--c); }
+.qrank { position: absolute; left: 0; right: 0; bottom: 100%; padding-bottom: 4px; text-align: center; font-size: 13px; font-weight: 700; color: var(--ink); }
+.qaxis { font-size: 13.5px; color: var(--ink-2); margin: 8px 0 0 40px; }
+#queues .figure { margin-bottom: 32px; }
+td .swatch { margin-right: 7px; }
+
+/* Figure 4: team × stage heatmap */
+.heat-wrap { overflow-x: auto; }
+table.heat { border-collapse: separate; border-spacing: 3px; min-width: 460px; }
+.heat th, .heat td { border: 0; padding: 0 6px; }
+.heat thead th { font-size: 13px; text-align: center; padding-bottom: 6px; white-space: normal; }
+.heat th[scope="row"] { font-weight: 600; color: var(--ink); padding-right: 12px; }
+.heat th small { font-weight: 400; color: var(--ink-3); margin-left: 6px; font-size: 13px; }
+.heat td { text-align: center; height: 34px; min-width: 72px; font-weight: 600; color: var(--ink); }
+.heat td .num { color: inherit; }
+.heat td.h0 { color: var(--ink-3); font-weight: 400; box-shadow: inset 0 0 0 1px var(--rule); }
+.heat td.h1 { background: color-mix(in srgb, var(--s-reviewer) 12%, var(--bar-track)); }
+.heat td.h2 { background: color-mix(in srgb, var(--s-reviewer) 26%, var(--bar-track)); }
+.heat td.h3 { background: color-mix(in srgb, var(--s-reviewer) 42%, var(--bar-track)); }
+.heat td.h4 { background: color-mix(in srgb, var(--s-reviewer) 60%, var(--bar-track)); color: var(--on-heat); }
+.heat td.h5 { background: color-mix(in srgb, var(--s-reviewer) 80%, var(--bar-track)); color: var(--on-heat); }
+.heat td.h6 { background: var(--s-reviewer); color: var(--on-heat); }
+.heat-scale { display: flex; align-items: center; gap: 10px; margin: 12px 0 0; font-size: 13px; color: var(--ink-2); }
+.heat-scale i { display: block; width: 140px; height: 10px; background: linear-gradient(90deg, color-mix(in srgb, var(--s-reviewer) 12%, var(--bar-track)), var(--s-reviewer)); }
+#teams .how .table-wrap { margin-top: 8px; }
 
 /* Tables */
 .table-wrap { overflow-x: auto; margin: 0 -24px; padding: 0 24px; }
@@ -249,6 +348,13 @@ tr.group-sep td { color: var(--ink-3); font-size: 13px; padding-top: 22px; borde
 
 @media (max-width: 900px) {
   .opening, .pair, .method { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  /* Stacked, the proof follows the claim: Figure 1 moves up to sit right after
+     the summary sentence, ahead of the explainer and the findings. */
+  .opening { display: flex; flex-direction: column; gap: 0; }
+  .opening > div { display: contents; }
+  .opening > .figure { order: 1; margin: 18px 0 32px; }
+  .opening .plain, .opening .findings-head, .opening .findings { order: 2; }
+  .stage-key.state-key { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   nav a:not(.repo-link) { display: none; }
 }
 @media (max-width: 560px) {
@@ -259,7 +365,19 @@ tr.group-sep td { color: var(--ink-3); font-size: 13px; padding-top: 22px; borde
   nav { gap: 12px; }
   .table-wrap { margin: 0 -16px; padding: 0 16px; }
   .figure { padding: 18px 16px 14px; margin: 0 -16px; }
-  .state-row { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .fig-stat { font-size: 19px; }
+  .stage-key, .stage-key.state-key { grid-template-columns: minmax(0, 1fr); }
+  .waffle { gap: 10px; }
+  .wg { flex: var(--c40) 1 0; }
+  .wg-head .long { display: none; }
+  .wg-head .short { display: inline; }
+  .wg-head b { font-size: 16px; }
+  .wg-bands { gap: 3px; }
+  .band { flex: var(--c40) 1 0; grid-template-rows: repeat(40, auto); gap: 1px; }
+  .qplot { --gut: 32px; height: 220px; }
+  .qbars { gap: 2px; }
+  .qrank { font-size: 11px; }
+  .qaxis { margin-left: 32px; }
   .summary { font-size: 17px; }
   h2 { font-size: 24px; }
   .evidence { padding: 14px 14px 10px; }
@@ -277,10 +395,18 @@ tr.group-sep td { color: var(--ink-3); font-size: 13px; padding-top: 22px; borde
   table.ranked td.examples { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 2px 12px; }
   table.ranked td.examples::before { flex-basis: 100%; }
   table.ranked td.examples a { margin-right: 0; }
+  table.ranked td .swatch { display: none; }
+  /* Heatmap fits the phone: each team's name sits above its row of four cells. */
+  table.heat, table.heat thead, table.heat tbody { display: block; min-width: 0; }
+  table.heat tr { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; margin-bottom: 3px; }
+  table.heat thead th:first-child { display: none; }
+  table.heat thead th { padding: 0 2px 4px; font-size: 12.5px; }
+  table.heat th[scope="row"] { grid-column: 1 / -1; padding: 8px 0 2px; }
+  table.heat td { min-width: 0; height: 36px; display: flex; align-items: center; justify-content: center; }
   table.ranked .pd { justify-content: flex-end; }
 }
 @media (forced-colors: active) {
-  .track .median, .track .p90, .state-bar .bar, .pd-bar span, .swatch { forced-color-adjust: none; }
+  .seg, .dot, .qbar, .team-strip .bar span, .heat td, .pd-bar span, .swatch { forced-color-adjust: none; }
 }
 @media print {
   .masthead, .theme, .skip { display: none; }
