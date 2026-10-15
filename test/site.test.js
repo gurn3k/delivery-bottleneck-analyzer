@@ -39,7 +39,7 @@ test('the hand-written share card and meta tags match the rendered headline', ()
 });
 
 test('key findings and byline show the snapshot’s numbers', () => {
-  const findings = textOf(site.main.all('ul', 'findings')[0]);
+  const findings = textOf(site.main.all('ol', 'findings')[0]);
   assert.ok(findings.includes(`a median ${days(o.merged.review.median)}`));
   assert.ok(findings.includes(`about ${days(o.merged.review.p90)} or longer`));
   assert.ok(findings.includes(`merging took a median ${days(o.merged.mergeWait.median)}`));
@@ -54,6 +54,36 @@ test('figure 1 has one row per stage with its median and p90', () => {
     const { median, p90 } = o.merged[key];
     assert.ok(rows[i].includes(`median ${dur(median)} · p90 ${dur(p90)}`), rows[i]);
   }
+});
+
+test('figure 1 splits merged PRs into stages that add up to 100%', () => {
+  const segs = site.main.byId('figure-1').all('button', 'seg');
+  assert.equal(segs.length, 4);
+  const shares = segs.map((b) => Number(textOf(b).replace('%', '')));
+  assert.ok(Math.abs(shares.reduce((a, b) => a + b, 0) - 100) <= 2, shares.join(' + '));
+});
+
+test('figure 2 draws one square per open PR, grouped by whose move it is', () => {
+  const fig = site.main.byId('figure-2');
+  assert.equal(fig.all('span', 'dot').length, o.backlog.n);
+  for (const band of fig.all('button', 'band')) {
+    const n = Number(band.getAttribute('aria-label').match(/^([\d,]+) PRs/)[1].replace(/,/g, ''));
+    assert.equal(band.all('span', 'dot').length, n, band.getAttribute('aria-label'));
+  }
+});
+
+test('figure 3 draws the same queues as table 1, in rank order', () => {
+  const bars = site.main.byId('figure-3').all('button', 'qbar').map((b) => b.getAttribute('aria-label'));
+  const top = metrics.bottlenecks.slice(0, 10);
+  assert.equal(bars.length, top.length);
+  for (const [i, q] of top.entries()) assert.ok(bars[i].startsWith(`${q.rank}. sig/${q.sig}`) && bars[i].includes(`${count(q.prDays)} PR-days`), bars[i]);
+});
+
+test('each section heading carries its finding, in the order of the key findings', () => {
+  const heads = site.main.all('strong', 'finding-head').map((e) => textOf(e).replace(/\.$/, ''));
+  const h2 = ['backlog-h', 'queues-h', 'teams-h'].map((id) => textOf(site.main.byId(id)));
+  assert.equal(heads.length, 4);
+  for (const [i, h] of h2.entries()) assert.equal(h, `${i + 2}. ${heads[i + 1]}`);
 });
 
 test('table 1 lists the top 10 queues in rank order', () => {
@@ -79,10 +109,16 @@ test('the brief shows every bullet with its cited PRs', () => {
 });
 
 test('the teams table has a row for every group, 10 shown at first', () => {
-  const rows = site.main.byId('teams').all('tbody')[0].all('tr').filter((tr) => !tr.className.includes('group-sep'));
+  const full = site.main.byId('teams').all('details', 'how')[0];
+  const rows = full.all('tbody')[0].all('tr').filter((tr) => !tr.className.includes('group-sep'));
   assert.equal(rows.length, Object.keys(metrics.groups).length);
   const named = rows.filter((tr) => /^sig\//.test(textOf(tr.all('th')[0])));
   assert.equal(named.filter((tr) => !tr.hidden).length, Math.min(10, named.length));
+});
+
+test('figure 4 has a row for every team with enough open PRs', () => {
+  const teams = Object.keys(metrics.groups).filter((g) => g !== 'cross-cutting' && g !== 'no-sig' && metrics.groups[g].backlog.n >= metrics.minSample);
+  assert.equal(site.main.byId('figure-4').all('tbody')[0].all('tr').length, teams.length);
 });
 
 test('every count that opens evidence opens exactly that many PRs', () => {
