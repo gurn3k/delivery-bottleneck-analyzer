@@ -17,5 +17,5 @@
     "eval:brief": "node scripts/score-brief.js eval/brief/history/run-1.json eval/brief/history/run-2.json eval/brief/history/run-3.json eval/brief/history/run-6.json eval/brief/history/run-7.json",
     "test": "node --test test/*.test.js"
   },
-  "license": "MIT"
+  "license": "UNLICENSED"
 }
