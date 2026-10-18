@@ -87,7 +87,3 @@ The owner refreshes the dashboard when they choose to (ADR 0009):
 The page ships with the full report as static HTML, so link scanners, search engines and readers without JavaScript see the findings. `site/app.js` then redraws it with the interactive evidence panels. The static copy is drawn by running `app.js` itself against a small DOM (`src/fake-dom.js`), so the two can't disagree.
 
 The OpenRouter key stays in the local `.env`. Nothing runs on a schedule, and no key is stored on GitHub.
-
-## License
-
-MIT
