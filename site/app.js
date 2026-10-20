@@ -634,6 +634,7 @@ function colophon(m) {
   document.getElementById('colophon').replaceChildren(el('div', { class: 'colophon-inner' },
     el('span', {}, `Snapshot of ${longDate(m.fetchedAt)}. Public GitHub data. Not affiliated with Kubernetes or the CNCF.`),
     el('a', { href: REPO_URL, target: '_blank', rel: 'noopener' }, 'Source on GitHub'),
+    el('span', { class: 'analytics-note' }, 'Visits are counted with Google Analytics. No ads, and no cookies for visitors in the EU or UK.'),
     // Maker signature, shared across gurn3k builds. Only the wordmark links.
     el('div', { class: 'signature' },
       el('span', { class: 'product' },
