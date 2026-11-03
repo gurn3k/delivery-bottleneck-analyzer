@@ -9,7 +9,7 @@
 3. **Author queues are ranked**, labeled "owner: author" so they don't read as slow reviewers. Waiting on an author is still waiting.
 4. **Cross-cutting PRs (more than 3 SIGs) and PRs with no SIG label get their own rows and are never ranked**, so dependency bumps and untriaged PRs don't distort any team's numbers.
 5. **Example PRs are the five longest-waiting in the queue,** because waiting time is what's ranked.
-6. **Percentiles use the nearest-rank method** (`percentile_disc`), the same as CNCF DevStats, so the [cross-check](../../research/devstats-cross-check.md) compares like with like.
+6. **Percentiles use the nearest-rank method** (`percentile_disc`), the same as CNCF DevStats, so the [cross-check](../research/devstats-cross-check.md) compares like with like.
 7. **The minimum sample of 10 applies to each statistic,** not only each group. A SIG with 40 merged PRs but 6 approvals still shows `—` for approval time.
 8. **Waits in the reviewer queue run from ready time,** as ticket 03 defines it. A PR that had one early comment and nothing since shows its full wait.
 9. **Comparisons across SIGs count distinct PRs.** A PR labeled with both SIGs counts once (231 PRs, not 240). Per-SIG tables still count it in each SIG, which the table notes.

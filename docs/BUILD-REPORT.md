@@ -58,7 +58,7 @@ The dashboard was redesigned on 2026-10-06 following the Impeccable process Redl
 
 ## Decisions made during the build
 
-Product rules are in [ADR 0009](docs/adr/0009-on-demand-snapshot.md) (on-demand snapshot) and [ADR 0010](docs/adr/0010-ranking-and-counting-rules.md) (ranking and counting). Technical decisions:
+Product rules are in [ADR 0009](adr/0009-on-demand-snapshot.md) (on-demand snapshot) and [ADR 0010](adr/0010-ranking-and-counting-rules.md) (ranking and counting). Technical decisions:
 
 - **Node 22.9+**, so `npm run brief` can read the key from `.env` with `--env-file-if-exists` and stay dependency-free.
 - **The brief's input is finished sentences, not JSON fields.** The model copied field names ("medianWait") into two rejected runs. With sentences, there are no names to copy.

@@ -45,8 +45,8 @@ Kubernetes already publishes detailed PR-velocity charts through CNCF DevStats. 
 
 - `site/data/metrics.json`: the snapshot, with per-PR records for every drill-down.
 - `site/data/brief.json`: the published brief, reviewed by the product owner, with one recorded edit.
-- `research/devstats-cross-check.md`: agreement with Kubernetes' own DevStats on the main finding.
-- `BUILD-REPORT.md`, `SELF-REVIEW.md`, `eval/brief/`: how it was built and checked.
+- `docs/research/devstats-cross-check.md`: agreement with Kubernetes' own DevStats on the main finding.
+- `docs/BUILD-REPORT.md`, `docs/SELF-REVIEW.md`, `eval/brief/`: how it was built and checked.
 - No testimonials, users, adoption numbers or endorsements exist. Never imply Kubernetes or CNCF endorses or uses this.
 
 ## Product Principles
