@@ -622,11 +622,11 @@ function methodSection(m) {
       el('div', {},
         el('h3', {}, 'Checked against DevStats'),
         el('p', {}, 'Kubernetes’ own DevStats charts PR velocity over time. Recomputing its “time to approve and merge” definitions on this data, for PRs created in August and September 2026, gives the same picture: most of the time goes to waiting for lgtm, and merging after approval takes hours. The medians differ by 16 to 28%; ',
-          doc('research/devstats-cross-check.md', 'the cross-check'), ' explains the likely causes.')),
+          doc('docs/research/devstats-cross-check.md', 'the cross-check'), ' explains the likely causes.')),
       el('div', {},
         el('h3', {}, 'How it was built'),
-        el('p', {}, 'Built by Gurnek Khaira from a ', doc('PRD.md', 'product spec'), ', ',
-          doc('docs/adr', 'decision records'), ' and tickets. The ', doc('BUILD-REPORT.md', 'build report'),
+        el('p', {}, 'Built by Gurnek Khaira from a ', doc('docs/PRD.md', 'product spec'), ', ',
+          doc('docs/adr', 'decision records'), ' and tickets. The ', doc('docs/BUILD-REPORT.md', 'build report'),
           ' covers tests, costs, the security review and what couldn’t be verified.'))));
 }
 

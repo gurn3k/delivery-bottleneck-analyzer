@@ -7,9 +7,9 @@ Live report: https://whosemoveisit.gurn3k.com
 
 ![The live report: a pull request waits 4 days for review, then merges in under 2 hours, beside a chart of where a merged PR's time goes](docs/images/screenshot.png)
 
-Kubernetes already publishes detailed PR-velocity charts through CNCF DevStats. This project answers a narrower question that DevStats spreads across several dashboards: right now, whose move is each open PR waiting on, and which team-and-stage queue holds the most waiting? It reads timelines directly from GitHub's API, ranks queues by PR-days of waiting, links every number to its PRs, and writes a short cited brief. It is a single snapshot, not a trend chart, and it doesn't measure reviewer capacity. [Existing tools](research/existing-tools.md) compares it with DevStats and commercial products.
+Kubernetes already publishes detailed PR-velocity charts through CNCF DevStats. This project answers a narrower question that DevStats spreads across several dashboards: right now, whose move is each open PR waiting on, and which team-and-stage queue holds the most waiting? It reads timelines directly from GitHub's API, ranks queues by PR-days of waiting, links every number to its PRs, and writes a short cited brief. It is a single snapshot, not a trend chart, and it doesn't measure reviewer capacity. [Existing tools](docs/research/existing-tools.md) compares it with DevStats and commercial products.
 
-Built by Gurnek Khaira with AI coding agents (Claude Code), working from a product spec ([PRD.md](PRD.md)), [decision records](docs/adr/) and [tickets](.scratch/v1/issues/). [BUILD-REPORT.md](BUILD-REPORT.md) covers what was built and checked, [FINDINGS.md](FINDINGS.md) the live test, and [LEARNINGS.md](LEARNINGS.md) what the build taught.
+Built by Gurnek Khaira with AI coding agents (Claude Code), working from a product spec ([PRD.md](docs/PRD.md)), [decision records](docs/adr/) and [tickets](.scratch/v1/issues/). [BUILD-REPORT.md](docs/BUILD-REPORT.md) covers what was built and checked, [FINDINGS.md](docs/FINDINGS.md) the live test, and [LEARNINGS.md](docs/LEARNINGS.md) what the build taught.
 
 ## What it measures
 
@@ -38,7 +38,7 @@ Two review queues hold the most waiting. sig/api-machinery has 120 open PRs wait
 
 Waiting on the author is about as common as waiting on a reviewer: 337 open PRs need a rebase, requested changes or a process label from their author, against 368 waiting for review.
 
-The main finding agrees with Kubernetes' own DevStats. Recomputing DevStats' "PR Time to Approve and Merge" definitions on this data, for PRs created in August and September 2026, shows the same pattern: most of the time goes to waiting for lgtm, and merging after approval takes hours at the median. The medians differ by 16 to 28%; the [cross-check](research/devstats-cross-check.md) covers the likely causes.
+The main finding agrees with Kubernetes' own DevStats. Recomputing DevStats' "PR Time to Approve and Merge" definitions on this data, for PRs created in August and September 2026, shows the same pattern: most of the time goes to waiting for lgtm, and merging after approval takes hours at the median. The medians differ by 16 to 28%; the [cross-check](docs/research/devstats-cross-check.md) covers the likely causes.
 
 The numbers are a snapshot of 2026-10-04. `npm run snapshot` refreshes it.
 
